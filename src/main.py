@@ -3,21 +3,24 @@ from src.utils.input_parser import parse_input
 from src.handlers.contact_handlers import (
     handle_add_contact,
     handle_change_contact,
+    handle_add_email,
     handle_show_phone,
-    handle_show_all
+    handle_show_email,
+    handle_show_all,
 )
 from src.handlers.birthday_handlers import (
     handle_add_birthday,
     handle_show_birthday,
-    handle_birthdays
+    handle_birthdays,
 )
 from src.models.address_book import AddressBook
+
 
 def main() -> None:
     filename: str = "my_address_book.pkl"
     book: AddressBook = load_data(filename)
     print("Welcome to the assistant bot!")
-    
+
     while True:
         user_input: str = input("Enter a command: ")
         command: str
@@ -44,6 +47,12 @@ def main() -> None:
         elif command == "all":
             print(handle_show_all(book))
 
+        elif command == "add-email":
+            print(handle_add_email(args, book))
+
+        elif command == "show-email":
+            print(handle_show_email(args, book))
+
         elif command == "add-birthday":
             print(handle_add_birthday(args, book))
 
@@ -56,5 +65,6 @@ def main() -> None:
         else:
             print("Invalid command.")
 
+
 if __name__ == "__main__":
-    main() 
+    main()
