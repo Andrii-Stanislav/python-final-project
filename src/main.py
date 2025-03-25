@@ -15,7 +15,8 @@ from src.handlers.note_handlers import (
     handle_add_note,
     handle_edit_note,
     handle_delete_note,
-    handle_show_notes
+    handle_show_notes,
+    handle_find_note
 )
 from src.models.address_book import AddressBook
 from src.models.notes_book import NotesBook  
@@ -74,6 +75,9 @@ def main() -> None:
 
         elif command == "delete-note":
             print(handle_delete_note(args, notes))
+
+        elif command == "find-note":
+            print(handle_find_note(args, notes))
 
         elif command == "show-notes":
             print(handle_show_notes(notes))

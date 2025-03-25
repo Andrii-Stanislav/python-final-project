@@ -11,9 +11,16 @@ def handle_add_note(args: List[str], book: "NotesBook") -> str:
 
 @input_error
 def handle_find_note(args: List[str], book: "NotesBook") -> str:
-    if len(args) != 1:
-        raise IndexError("Please provide note title.")
-    return book.find_note(args[0])
+    if not args:
+        return "Please provide a search keyword."
+    
+    keyword = " ".join(args).lower() 
+    matching_notes = [
+        str(note) for note in book.data.values()
+        if keyword in note.title.lower() or keyword in note.content.lower()
+    ]
+    
+    return "\n".join(matching_notes) if matching_notes else "No matching notes found."
 
 @input_error
 def handle_edit_note(args: List[str], book: "NotesBook") -> str:
