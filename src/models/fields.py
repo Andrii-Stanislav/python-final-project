@@ -37,5 +37,5 @@ class Birthday(Field):
             raise ValidationException("Invalid date format. Use DD.MM.YYYY")
 
 class Address(Field):
-    def __init__(self, value):
+    def __init__(self, value: str) -> None:
         super().__init__(value)

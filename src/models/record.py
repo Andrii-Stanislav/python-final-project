@@ -6,7 +6,7 @@ class Record:
         self.name: Name = Name(name)
         self.phones: List[Phone] = []
         self.birthday: Optional[Birthday] = None
-        self.address = None
+        self.address: List[Address] = None
         
     def add_phone(self, phone: str) -> None:
         self.phones.append(Phone(phone))
