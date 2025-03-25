@@ -1,11 +1,12 @@
 from typing import List, Optional
-from src.models.fields import Name, Phone, Birthday
+from src.models.fields import Name, Phone, Birthday, Address
 
 class Record:
     def __init__(self, name: str) -> None:
         self.name: Name = Name(name)
         self.phones: List[Phone] = []
         self.birthday: Optional[Birthday] = None
+        self.address = None
         
     def add_phone(self, phone: str) -> None:
         self.phones.append(Phone(phone))
@@ -33,6 +34,9 @@ class Record:
         if self.birthday:
             return self.birthday.value.strftime("%d.%m.%Y")
         return "Birthday not set"
+    
+    def add_address(self, address):
+        self.address = Address(address)
 
     def __str__(self) -> str:
         birthday_str = f", birthday: {self.show_birthday()}" if self.birthday else ""

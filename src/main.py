@@ -11,6 +11,9 @@ from src.handlers.birthday_handlers import (
     handle_show_birthday,
     handle_birthdays
 )
+from src.handlers.address_handlers import (
+    handle_add_address
+)
 from src.models.address_book import AddressBook
 
 def main() -> None:
@@ -52,6 +55,9 @@ def main() -> None:
 
         elif command == "birthdays":
             print(handle_birthdays(args, book))
+
+        elif command == "add-address":
+            print(handle_add_address(args, book))
 
         else:
             print("Invalid command.")

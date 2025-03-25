@@ -34,4 +34,8 @@ class Birthday(Field):
         try:
             self.value: date = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError:
-            raise ValidationException("Invalid date format. Use DD.MM.YYYY") 
+            raise ValidationException("Invalid date format. Use DD.MM.YYYY")
+
+class Address(Field):
+    def __init__(self, value):
+        super().__init__(value)
