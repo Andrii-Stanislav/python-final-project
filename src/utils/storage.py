@@ -1,14 +1,19 @@
 import pickle
-from typing import Optional
 from src.models.address_book import AddressBook
+from src.models.notes_book import NotesBook
 
-def save_data(book: AddressBook, filename: str = "addressbook.pkl") -> None:
+def save_data(book: object, filename: str) -> None:
     with open(filename, "wb") as f:
         pickle.dump(book, f)
 
-def load_data(filename: str = "addressbook.pkl") -> AddressBook:
+def load_data(filename: str) -> object:
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
-        return AddressBook() 
+        if "address_book" in filename:
+            return AddressBook()  
+        elif "notes" in filename:
+            return NotesBook()  
+        else:
+            raise ValueError("Unknown file type")

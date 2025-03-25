@@ -11,13 +11,24 @@ from src.handlers.birthday_handlers import (
     handle_show_birthday,
     handle_birthdays
 )
+from src.handlers.note_handlers import ( 
+    handle_add_note,
+    handle_edit_note,
+    handle_delete_note,
+    handle_show_notes
+)
 from src.models.address_book import AddressBook
+from src.models.notes_book import NotesBook  
 
 def main() -> None:
     filename: str = "my_address_book.pkl"
+    notes_filename: str = "my_notes.pkl"
+
     book: AddressBook = load_data(filename)
-    print("Welcome to the assistant bot!")
+    notes: NotesBook = load_data(notes_filename) 
     
+    print("Welcome to the assistant bot!")
+
     while True:
         user_input: str = input("Enter a command: ")
         command: str
@@ -26,6 +37,7 @@ def main() -> None:
 
         if command in ["close", "exit"]:
             save_data(book, filename)
+            save_data(notes, notes_filename) 
             print("Good bye!")
             break
 
@@ -53,8 +65,21 @@ def main() -> None:
         elif command == "birthdays":
             print(handle_birthdays(args, book))
 
+        # Notes
+        elif command == "add-note":
+            print(handle_add_note(args, notes))
+
+        elif command == "edit-note":
+            print(handle_edit_note(args, notes))
+
+        elif command == "delete-note":
+            print(handle_delete_note(args, notes))
+
+        elif command == "show-notes":
+            print(handle_show_notes(notes))
+
         else:
             print("Invalid command.")
 
 if __name__ == "__main__":
-    main() 
+    main()
