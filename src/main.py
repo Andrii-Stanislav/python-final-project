@@ -3,6 +3,7 @@ from src.utils.input_parser import parse_input
 from src.handlers.contact_handlers import (
     handle_add_contact,
     handle_change_contact,
+    handle_delete_contact,
     handle_add_email,
     handle_show_phone,
     handle_show_email,
@@ -13,24 +14,24 @@ from src.handlers.birthday_handlers import (
     handle_show_birthday,
     handle_birthdays,
 )
-from src.handlers.note_handlers import ( 
+from src.handlers.note_handlers import (
     handle_add_note,
     handle_edit_note,
     handle_delete_note,
     handle_show_notes,
-    handle_find_note
+    handle_find_note,
 )
 from src.models.address_book import AddressBook
-from src.models.notes_book import NotesBook  
+from src.models.notes_book import NotesBook
 
 
 def main() -> None:
     filename: str = "my_address_book.pkl"
     notes_filename: str = "my_notes.pkl"
 
-    book: AddressBook = load_data(filename, AddressBook)  
-    notes: NotesBook = load_data(notes_filename, NotesBook)  
-    
+    book: AddressBook = load_data(filename, AddressBook)
+    notes: NotesBook = load_data(notes_filename, NotesBook)
+
     print("Welcome to the assistant bot!")
 
     while True:
@@ -41,7 +42,7 @@ def main() -> None:
 
         if command in ["close", "exit"]:
             save_data(book, filename)
-            save_data(notes, notes_filename) 
+            save_data(notes, notes_filename)
             print("Good bye!")
             break
 
@@ -53,6 +54,9 @@ def main() -> None:
 
         elif command == "change":
             print(handle_change_contact(args, book))
+
+        elif command == "delete":
+            print(handle_delete_contact(args, book))
 
         elif command == "phone":
             print(handle_show_phone(args, book))

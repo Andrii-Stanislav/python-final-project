@@ -53,7 +53,15 @@ class Record:
             raise ValueError("No email set for the contact.")
         return self.email.value
 
+    """This snippet's good for Cmd: 'all'"""
+
     def __str__(self) -> str:
+        birthday_str = f", birthday: {self.show_birthday()}" if self.birthday else ""
+        email_str = f", email: {self.show_email()}" if self.email else ""
+        return f"Contact name: {self.name.value}, phone(s): {'; '.join(p.value for p in self.phones)}{email_str}{birthday_str}"
+
+    """This snippet's on Raise Error in __str__ method - Cmd: 'all' need to be fixed"""
+    """def __str__(self) -> str:
         def format_phones():
             if not self.phones:
                 raise ValueError("No phone numbers set.")
@@ -78,7 +86,7 @@ class Record:
             f"phone(s): {phones_str}, "
             f"email: {email_str}, "
             f"birthday: {birthday_str}"
-        )
+        )"""
 
     def __setstate__(self, state: dict) -> None:
         self.__dict__ = state

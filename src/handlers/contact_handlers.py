@@ -6,32 +6,55 @@ from src.models.address_book import AddressBook
 @input_error
 def handle_add_contact(args: List[str], book: AddressBook) -> str:
     """Add a new contact with a name and an optional phone number."""
-    if len(args) != 2:
-        raise IndexError("Please provide contact name and a phone number.")
-    name = args[0]
-    phone = args[1] if len(args) > 1 else None
-    return book.add_contact(name, phone)
+    if len(args) < 2:
+        raise IndexError("Please provide at least one contact name and a phone number.")
+
+    phone = args[-1]  # Last argument as phone number
+    name = " ".join(args[:-1])  # Join all but the last argument as the contact name
+
+    # Normalize name using the AddressBook method
+    name = book.normalize_name(name)
+
+    try:
+        result = book.add_contact(name, phone)
+        return result
+    except Exception as e:
+        return f"Error adding {name}: {str(e)}"
 
 
 @input_error
 def handle_add_email(args: List[str], book: AddressBook) -> str:
     """Add an email address to an existing contact."""
-    if len(args) != 2:
+    if len(args) < 2:
         raise IndexError("Please provide contact name and email address.")
-    name = args[0]
-    email = args[1]
+    email = args[-1]
+    name = " ".join(args[:-1])
+    name = book.normalize_name(name)
     return book.add_email_to_contact(name, email)
 
 
 @input_error
 def handle_change_contact(args: List[str], book: AddressBook) -> str:
-    """Change a contact's phone number."""
-    if len(args) != 3:
+    """Change a contact's phone number for multiple contacts."""
+    if len(args) < 3:
         raise IndexError(
-            "Please provide contact name, old phone number and new phone number."
+            "Please provide at least one contact name, current phone number, and new phone number."
         )
-    name, old_phone, new_phone = args
-    return book.change_contact(name, old_phone, new_phone)
+
+    old_phone = args[-2]
+    new_phone = args[-1]
+    names = " ".join(args[:-2])
+
+    names = book.normalize_name(names)
+
+    output = []
+    try:
+        result = book.change_contact(names, old_phone, new_phone)
+        output.append(result)
+    except Exception as e:
+        output.append(f"Error for {names}: {str(e)}")
+
+    return "\n".join(output) if output else "No contacts updated."
 
 
 @input_error
@@ -39,7 +62,8 @@ def handle_show_phone(args: List[str], book: AddressBook) -> str:
     """Show the phone number(s) for a given contact."""
     if len(args) != 1:
         raise IndexError("Please provide contact name.")
-    name = args[0]
+    name = " ".join(args)
+    name = book.normalize_name(name)
     return book.show_phone(name)
 
 
@@ -48,7 +72,8 @@ def handle_show_email(args: List[str], book: AddressBook) -> str:
     """Show the email address for a given contact."""
     if len(args) != 1:
         raise IndexError("Please provide contact name.")
-    name = args[0]
+    name = " ".join(args)
+    name = book.normalize_name(name)
     return book.show_email(name)
 
 
@@ -59,3 +84,18 @@ def handle_show_all(book: AddressBook) -> str:
         return book.show_all()
     except ValueError as e:
         return f"Error: {e}"
+
+
+@input_error
+def handle_delete_contact(args: List[str], book: AddressBook) -> str:
+    """Delete a contact by name."""
+    if len(args) < 1:
+        raise ValueError("Please provide the name of the contact to delete.")
+
+    name = " ".join(args)
+    name = book.normalize_name(name)
+    try:
+        book.delete(name)
+        return f"Contact '{name}' has been deleted."
+    except KeyError as e:
+        return str(e)

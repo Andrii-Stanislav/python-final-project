@@ -2,6 +2,8 @@ from datetime import datetime, date
 from typing import Any
 from email_validator import validate_email, EmailNotValidError
 
+import re
+
 
 class ValidationException(Exception):
     pass
@@ -21,8 +23,10 @@ class Name(Field):
         self.validate_name(value)
 
     def validate_name(self, value: str) -> None:
-        if not value.isalpha():
-            raise ValidationException("Name must contain only letters")
+        if not re.match(r"^[A-Za-z\s'-]+$", value):
+            raise ValidationException(
+                "Name must contain only letters, spaces, hyphens, or apostrophes."
+            )
 
 
 class Phone(Field):
