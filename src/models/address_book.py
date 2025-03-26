@@ -2,7 +2,6 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from src.models.record import Record
-import re
 
 
 class AddressBook(UserDict[str, Record]):

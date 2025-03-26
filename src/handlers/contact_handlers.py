@@ -76,21 +76,6 @@ def handle_show_phone(args: List[str], book: AddressBook) -> str:
 
 
 @input_error
-def handle_show_phone(args: List[str], book: AddressBook) -> str:
-    """Show the phone number(s) for a given contact."""
-    if len(args) != 1:
-        return "Please provide one contact to show."
-
-    name = " ".join(args).strip()
-    normalized_name = book.normalize_name(name)
-
-    try:
-        return book.show_phone(normalized_name)
-    except KeyError:
-        return f"Contact '{normalized_name}' not found."
-
-
-@input_error
 def handle_show_email(args: List[str], book: AddressBook) -> str:
     """Show the email address for a given contact."""
     if len(args) != 1:
