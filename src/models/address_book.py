@@ -2,16 +2,28 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from src.models.record import Record
+import re
+
 
 class AddressBook(UserDict[str, Record]):
+    def normalize_name(self, name: str) -> str:
+        """Normalize names to title case and strip leading/trailing spaces"""
+        return " ".join(part.capitalize() for part in name.strip().split())
+
     def add_record(self, record: Record) -> None:
-        self.data[record.name.value] = record
-    
+        normalized_name = self.normalize_name(record.name.value)
+        self.data[normalized_name] = record
+
     def find(self, name: str) -> Optional[Record]:
-        return self.data.get(name)
+        normalized_name = self.normalize_name(name)
+        return self.data.get(normalized_name)
 
     def delete(self, name: str) -> None:
-        del self.data[name]
+        normalized_name = self.normalize_name(name)
+        if normalized_name in self.data:
+            del self.data[normalized_name]
+        else:
+            raise KeyError(f"Contact '{name}' not found.")
 
     def get_upcoming_birthdays(self, date_interval: str) -> List[Dict[str, str]]:
         try:
@@ -49,7 +61,8 @@ class AddressBook(UserDict[str, Record]):
         return final_result
 
     def add_contact(self, name: str, phone: Optional[str] = None) -> str:
-        record = self.find(name)
+        normalized_name = self.normalize_name(name)
+        record = self.find(normalized_name)
         if record is None:
             record = Record(name)
             self.add_record(record)
@@ -61,19 +74,36 @@ class AddressBook(UserDict[str, Record]):
         return message
 
     def change_contact(self, name: str, old_phone: str, new_phone: str) -> str:
-        record = self.find(name)
+        normalized_name = self.normalize_name(name)
+        record = self.find(normalized_name)
         if record is None:
-            raise KeyError('Contact not found.')
+            raise KeyError("Contact not found.")
         record.edit_phone(old_phone, new_phone)
         return "Phone number updated."
 
-    def show_phone(self, name: str) -> str:
-        record = self.find(name)
+    def add_email_to_contact(self, name: str, email: str) -> str:
+        normalized_name = self.normalize_name(name)
+        record = self.find(normalized_name)
         if record is None:
-            raise KeyError('Contact not found.')
-        return '; '.join(phone.value for phone in record.phones)
+            raise KeyError("Contact not found.")
+        record.add_email(email)
+        return "Contact updated with email address."
+
+    def show_phone(self, name: str) -> str:
+        normalized_name = self.normalize_name(name)
+        record = self.find(normalized_name)
+        if record is None:
+            raise KeyError("Contact not found.")
+        return "; ".join(phone.value for phone in record.phones)
+
+    def show_email(self, name: str) -> str:
+        normalized_name = self.normalize_name(name)
+        record = self.find(normalized_name)
+        if record is None:
+            raise KeyError("Contact not found.")
+        return str(record.email) if record.email else "No email set."
 
     def show_all(self) -> str:
         if not self.data:
             return "No contacts available."
-        return '\n'.join(str(record) for record in self.data.values()) 
+        return "\n".join(str(record) for record in self.data.values())
