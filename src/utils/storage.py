@@ -1,14 +1,16 @@
 import pickle
-from typing import Optional
-from src.models.address_book import AddressBook
+from typing import Type, TypeVar
 
-def save_data(book: AddressBook, filename: str = "addressbook.pkl") -> None:
-    with open(filename, "wb") as f:
-        pickle.dump(book, f)
+T = TypeVar('T', bound=object)
 
-def load_data(filename: str = "addressbook.pkl") -> AddressBook:
+def load_data(filename: str, default_item: Type[T]) -> object:
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
-        return AddressBook() 
+        return default_item() 
+
+def save_data(book: object, filename: str) -> None:
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
