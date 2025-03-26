@@ -13,25 +13,29 @@ class Field:
 
 class NoteTitle(Field):
     def __init__(self, value: str) -> None:
-        self.validate_title(value)
-        super().__init__(value)
+        clear_value = value.strip()
+        self.validate_title(clear_value)
+        super().__init__(clear_value)
 
     def validate_title(self, value: str) -> None:
-        if not value.strip():
+        if not value:
             raise ValidationException("Note title cannot be empty")
         if len(value) > 100:
             raise ValidationException("Note title must not exceed 100 characters")
 
+
 class NoteContent(Field):
     def __init__(self, value: str) -> None:
-        self.validate_content(value)
-        super().__init__(value)
+        clear_value = value.strip()
+        self.validate_content(clear_value)
+        super().__init__(clear_value)
 
     def validate_content(self, value: str) -> None:
-        if not value.strip():
+        if not value:
             raise ValidationException("Note content cannot be empty")
         if len(value) > 1000:
             raise ValidationException("Note content must not exceed 1000 characters")
+
 
 class Note:
     def __init__(self, title: str, content: str) -> None:

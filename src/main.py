@@ -25,8 +25,8 @@ def main() -> None:
     filename: str = "my_address_book.pkl"
     notes_filename: str = "my_notes.pkl"
 
-    book: AddressBook = load_data(filename)
-    notes: NotesBook = load_data(notes_filename) 
+    book: AddressBook = load_data(filename, AddressBook)  
+    notes: NotesBook = load_data(notes_filename, NotesBook)  
     
     print("Welcome to the assistant bot!")
 
