@@ -5,21 +5,41 @@ from src.models.address_book import AddressBook
 @input_error
 def handle_add_address(args: List[str], book: AddressBook) -> str:
     if len(args) < 1:
-        return "Please provide contact name"
+        raise ValueError("Please provide contact name")
     name, *_ = args 
     record = book.find(name)
     if record is None:
-        return "Contact not found"
+        raise ValueError("Contact not found")
     elif record.address:
-        return f"Address already exists for {name}"
+        raise ValueError(f"Address already exists for {name}")
     address_parts = []
     address_fields = ["Street", "City", "Region", "Post-index"]
     for field in address_fields:
         value = input(f"Enter {field}: ")
         if not value.strip():
-            return f"{field} cannot be empty."
+            raise ValueError(f"{field} cannot be empty.")
         if field == "Post-index" and not value.isdigit():
-            return "Post-index must contain only digits."
+            raise ValueError("Post-index must contain only digits.")
         address_parts.append(value)
     record.add_address(address_parts)
     return f"Address: {' '.join(address_parts)} added for {name}"
+
+@input_error
+def handle_show_address(args: List[str], book: AddressBook) -> None:
+    if len(args) < 1:
+        raise ValueError("Please provide contact name")
+    name, *_ = args 
+    record = book.find(name)
+    if record is None:
+        raise ValueError("Contact not found")
+    return record.show_address()
+
+@input_error
+def handle_delete_address(args: List[str], book: AddressBook) -> None:
+    if len(args) < 1:
+        raise ValueError("Please provide contact name")
+    name, *_ = args 
+    record = book.find(name)
+    if record is None:
+        raise ValueError("Contact not found")
+    return record.delete_address()

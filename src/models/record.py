@@ -6,7 +6,7 @@ class Record:
         self.name: Name = Name(name)
         self.phones: List[Phone] = []
         self.birthday: Optional[Birthday] = None
-        self.address: List[Address] = None
+        self.address: Address = None
         
     def add_phone(self, phone: str) -> None:
         self.phones.append(Phone(phone))
@@ -35,9 +35,21 @@ class Record:
             return self.birthday.value.strftime("%d.%m.%Y")
         return "Birthday not set"
     
-    def add_address(self, address):
+    def add_address(self, address: List) -> None:
         self.address = Address(address)
+
+    def show_address(self) -> str:
+        if self.address:
+            return f"Address: {' '.join(self.address.value)} for {self.name.value}"
+        raise ValueError("Address not set")
+    
+    def delete_address(self) -> str:
+        if self.address:
+            self.address = None
+            return f"The address has been removed for {self.name.value}"
+        raise ValueError("Address not set")
 
     def __str__(self) -> str:
         birthday_str = f", birthday: {self.show_birthday()}" if self.birthday else ""
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}" 
+        address_str = f", address: {' '.join(self.address.value)}" if self.address else ""
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{address_str}" 
