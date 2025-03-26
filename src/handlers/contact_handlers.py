@@ -23,14 +23,22 @@ def handle_add_contact(args: List[str], book: AddressBook) -> str:
 
 
 @input_error
-def handle_add_email(args: List[str], book: AddressBook) -> str:
-    """Add an email address to an existing contact."""
+def add_email_to_contact(args: List[str], book: AddressBook) -> str:
+    """Add an email to an existing contact."""
     if len(args) < 2:
         raise IndexError("Please provide contact name and email address.")
+
     email = args[-1]
     name = " ".join(args[:-1])
     name = book.normalize_name(name)
-    return book.add_email_to_contact(name, email)
+
+    record = book.find(name)
+
+    if not record:
+        raise KeyError(f"Contact '{name}' not found.")
+
+    record.add_email(email)
+    return "Email added."
 
 
 @input_error
@@ -65,6 +73,21 @@ def handle_show_phone(args: List[str], book: AddressBook) -> str:
     name = " ".join(args)
     name = book.normalize_name(name)
     return book.show_phone(name)
+
+
+@input_error
+def handle_show_phone(args: List[str], book: AddressBook) -> str:
+    """Show the phone number(s) for a given contact."""
+    if len(args) != 1:
+        return "Please provide one contact to show."
+
+    name = " ".join(args).strip()
+    normalized_name = book.normalize_name(name)
+
+    try:
+        return book.show_phone(normalized_name)
+    except KeyError:
+        return f"Contact '{normalized_name}' not found."
 
 
 @input_error

@@ -4,7 +4,7 @@ from src.handlers.contact_handlers import (
     handle_add_contact,
     handle_change_contact,
     handle_delete_contact,
-    handle_add_email,
+    add_email_to_contact,
     handle_show_phone,
     handle_show_email,
     handle_show_all,
@@ -65,7 +65,7 @@ def main() -> None:
             print(handle_show_all(book))
 
         elif command == "add-email":
-            print(handle_add_email(args, book))
+            print(add_email_to_contact(args, book))
 
         elif command == "show-email":
             print(handle_show_email(args, book))
