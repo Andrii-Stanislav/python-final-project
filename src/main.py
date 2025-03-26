@@ -14,7 +14,12 @@ from src.handlers.birthday_handlers import (
     handle_show_birthday,
     handle_birthdays,
 )
-from src.handlers.note_handlers import (
+from src.handlers.address_handlers import (
+    handle_add_address,
+    handle_show_address,
+    handle_delete_address
+)
+from src.handlers.note_handlers import ( 
     handle_add_note,
     handle_edit_note,
     handle_delete_note,
@@ -78,6 +83,15 @@ def main() -> None:
 
         elif command == "birthdays":
             print(handle_birthdays(args, book))
+
+        elif command == "add-address":
+            print(handle_add_address(args, book))
+        
+        elif command == "show-address":
+            print(handle_show_address(args, book))
+
+        elif command == "delete-address":
+            print(handle_delete_address(args, book))
 
         # Notes
         elif command == "add-note":
