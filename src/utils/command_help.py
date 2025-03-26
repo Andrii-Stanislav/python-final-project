@@ -2,7 +2,7 @@ from tabulate import tabulate
 from typing import List, Tuple
 
 # Command categories and their commands
-COMMAND_CATEGORIES: Dict[str, List[Tuple[str, str]]] = {
+COMMAND_CATEGORIES: dict[str, List[Tuple[str, str]]] = {
     "Contact Management": [
         ("add <name> <phone>", "Add a new contact with phone number"),
         ("change <name> <old_phone> <new_phone>", "Change contact's phone number"),
