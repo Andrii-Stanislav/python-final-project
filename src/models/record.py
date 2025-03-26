@@ -19,44 +19,59 @@ class Record:
         for p in self.phones:
             if p.value == old_phone:
                 p.value = new_phone
+                return
+        raise ValueError(f"Phone number {old_phone} not found for editing.")
 
-    def find_phone(self, phone: str) -> Optional[Phone]:
+    def find_phone(self, phone: str) -> Phone:
         for p in self.phones:
             if p.value == phone:
                 return p
-        return None
+        raise ValueError(f"Phone number {phone} not found.")
 
     def remove_phone(self, phone: str) -> None:
         for p in self.phones:
             if p.value == phone:
                 self.phones.remove(p)
+                return
+        raise ValueError(f"Phone number {phone} not found for removal.")
 
     def remove_email(self) -> None:
+        if self.email is None:
+            raise ValueError("No email to remove.")
         self.email = None
 
     def add_birthday(self, birthday: str) -> None:
         self.birthday = Birthday(birthday)
 
     def show_birthday(self) -> str:
-        if self.birthday:
-            return self.birthday.value.strftime("%d.%m.%Y")
-        return "Birthday not set"
+        if not self.birthday:
+            raise ValueError("Birthday not set.")
+        return self.birthday.value.strftime("%d.%m.%Y")
 
     def show_email(self) -> str:
-        return self.email.value if self.email else "No email set for the contact"
+        if not self.email:
+            raise ValueError("No email set for the contact.")
+        return self.email.value
 
     def __str__(self) -> str:
-        phones_str = (
-            "; ".join(str(phone) for phone in self.phones)
-            if self.phones
-            else "No phone numbers"
-        )
-        email_str = str(self.email) if self.email else "No email set"
-        birthday_str = (
-            f"{self.birthday.value.strftime('%d.%m.%Y')}"
-            if self.birthday
-            else "No birthday set"
-        )
+        def format_phones():
+            if not self.phones:
+                raise ValueError("No phone numbers set.")
+            return "; ".join(str(phone) for phone in self.phones)
+
+        def format_email():
+            if not self.email:
+                raise ValueError("No email set for the contact.")
+            return str(self.email)
+
+        def format_birthday():
+            if not self.birthday:
+                raise ValueError("Birthday not set.")
+            return self.birthday.value.strftime("%d.%m.%Y")
+
+        phones_str = format_phones()
+        email_str = format_email()
+        birthday_str = format_birthday()
 
         return (
             f"Contact name: {self.name.value}, "

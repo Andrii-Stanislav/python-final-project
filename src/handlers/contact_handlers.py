@@ -55,4 +55,7 @@ def handle_show_email(args: List[str], book: AddressBook) -> str:
 @input_error
 def handle_show_all(book: AddressBook) -> str:
     """Show all contacts in the address book."""
-    return book.show_all()
+    try:
+        return book.show_all()
+    except ValueError as e:
+        return f"Error: {e}"
