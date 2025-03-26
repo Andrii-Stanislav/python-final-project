@@ -1,5 +1,7 @@
 from src.utils.storage import load_data, save_data
 from src.utils.input_parser import parse_input
+from src.utils.command_suggestions import suggest_command
+from src.utils.command_help import get_help_table
 from src.handlers.contact_handlers import (
     handle_add_contact,
     handle_change_contact,
@@ -52,7 +54,8 @@ def main() -> None:
             break
 
         elif command == "hello":
-            print("How can I help you?")
+            print("\nAvailable Commands:")
+            print(get_help_table())
 
         elif command == "add":
             print(handle_add_contact(args, book))
@@ -110,7 +113,11 @@ def main() -> None:
             print(handle_show_notes(notes))
 
         else:
-            print("Invalid command.")
+            suggestion = suggest_command(command)
+            if suggestion:
+                print(f"Invalid command. {suggestion}")
+            else:
+                print("Invalid command. Type 'hello' to see available commands.")
 
 
 if __name__ == "__main__":
