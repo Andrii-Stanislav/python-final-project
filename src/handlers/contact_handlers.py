@@ -5,7 +5,7 @@ from src.models.address_book import AddressBook
 
 @input_error
 def handle_add_contact(args: List[str], book: AddressBook) -> str:
-    """Add a new contact with a name and an optional phone number."""
+    """Add a new contact with a name and an optional phone number. Handler accepts any form: first name, middle name, last name, prefixes, related symbols, and lowercase input"""
     if len(args) < 2:
         raise IndexError("Please provide at least one contact name and a phone number.")
 
