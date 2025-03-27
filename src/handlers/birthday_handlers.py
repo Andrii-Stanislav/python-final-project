@@ -29,24 +29,27 @@ def handle_add_birthday(args: List[str], book: AddressBook) -> str:
 @input_error
 def handle_show_birthday(args: List[str], book: AddressBook) -> str:
     """Show the birthday of a given contact."""
-    if len(args) != 1:
+    if not args:
         raise IndexError("Please provide contact name.")
 
     name = " ".join(args)
     name = book.normalize_name(name)
 
     record = book.find(name)
-
     if not record:
         raise KeyError(f"Contact '{name}' not found.")
 
+    if not record.birthday:
+        raise ValueError("No birthday set.")
+
     return record.show_birthday()
+
 
 @input_error
 def handle_delete_birthday(args: List[str], book: AddressBook) -> str:
     if len(args) != 1:
         raise IndexError("Please provide contact name.")
-    
+
     name = " ".join(args)
     name = book.normalize_name(name)
 
@@ -54,7 +57,9 @@ def handle_delete_birthday(args: List[str], book: AddressBook) -> str:
 
     if not record:
         raise KeyError(f"Contact '{name}' not found.")
+
     return record.delete_birthday()
+
 
 @input_error
 def handle_birthdays(args: List[str], book: AddressBook) -> str:
@@ -65,10 +70,11 @@ def handle_birthdays(args: List[str], book: AddressBook) -> str:
     if len(upcoming) == 0:
         raise ValueError(f"There are no birthdays in the next {date_interval} days.")
     headers = {
-        "name": "Name", 
-        "birthday": "Byrthday", 
-        "congratulation_date": "Congratulation day"
+        "name": "Name",
+        "birthday": "Birthday",
+        "congratulation_date": "Congratulation day",
     }
     rowIDs = range(1, int(len(upcoming) + 1))
-    return tabulate(upcoming, headers=headers, tablefmt="rounded_grid", showindex=rowIDs)
-   
+    return tabulate(
+        upcoming, headers=headers, tablefmt="rounded_grid", showindex=rowIDs
+    )
