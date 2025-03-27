@@ -10,6 +10,7 @@ from src.handlers.contact_handlers import (
     handle_show_phone,
     handle_show_email,
     handle_show_all,
+    handle_find_contact,
 )
 from src.handlers.birthday_handlers import (
     handle_add_birthday,
@@ -95,6 +96,9 @@ def main() -> None:
 
         elif command == "delete-address":
             print(handle_delete_address(args, book))
+        
+        elif command == "find":
+            print(handle_find_contact(args, book))
 
         # Notes
         elif command == "add-note":

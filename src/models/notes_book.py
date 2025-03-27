@@ -1,5 +1,5 @@
 from collections import UserDict
-from typing import Optional, Any
+from typing import List, Any
 
 class ValidationException(Exception):
     pass
@@ -58,8 +58,9 @@ class NotesBook(UserDict):
         except ValidationException as e:
             return str(e)
 
-    def find_note(self, title: str) -> Optional[Note]:
-        return self.data.get(title)
+    def find_notes(self, keyword: str) -> List[Note]:
+        keyword = keyword.strip().lower()
+        return [note for title, note in self.data.items() if keyword in title.lower()]
 
     def edit_note(self, title: str, new_content: str) -> str:
         if title in self.data:
