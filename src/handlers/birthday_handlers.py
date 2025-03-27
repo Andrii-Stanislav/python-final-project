@@ -71,7 +71,7 @@ def handle_birthdays(args: List[str], book: AddressBook) -> str:
         raise ValueError(f"There are no birthdays in the next {date_interval} days.")
     headers = {
         "name": "Name",
-        "birthday": "Byrthday",
+        "birthday": "Birthday",
         "congratulation_date": "Congratulation day",
     }
     rowIDs = range(1, int(len(upcoming) + 1))
