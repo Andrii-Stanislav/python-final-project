@@ -122,4 +122,9 @@ class NotesBook(UserDict):
         if title not in self.data:
             return False
         return self.data[title].is_tag_exists(tag)
+    
+    def find_notes_by_tag(self, tag: str) -> List[Note]:
+        tag = tag.strip().lower()
+        return [note for note in self.data.values() if tag in (t.lower() for t in note.tags)]
+
 

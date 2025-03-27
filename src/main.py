@@ -31,6 +31,7 @@ from src.handlers.note_handlers import (
     handle_add_tag,
     handle_remove_tag,
     handle_check_tag,
+    handle_find_notes_by_tag,
 )
 from src.models.address_book import AddressBook
 from src.models.notes_book import NotesBook
@@ -128,6 +129,9 @@ def main() -> None:
         elif command == "check-tag":
             print(handle_check_tag(args, notes))
 
+        elif command == "find-notes-by-tag":
+            print(handle_find_notes_by_tag(args, notes))
+        
         else:
             suggestion = suggest_command(command)
             if suggestion:

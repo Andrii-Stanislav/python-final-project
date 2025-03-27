@@ -61,3 +61,11 @@ def handle_check_tag(args: List[str], book: "NotesBook") -> str:
     if book.is_tag_exists_in_note(title, tag):
         return f"Tag '{tag}' exists in note '{title}'."
     return f"Tag '{tag}' does not exist in note '{title}'."
+
+@input_error
+def handle_find_notes_by_tag(args: List[str], book: "NotesBook") -> str:
+    if not args:
+        raise IndexError("Please provide a tag to search for.")
+    tag = args[0]
+    notes = book.find_notes_by_tag(tag)
+    return "\n".join(str(note) for note in notes) if notes else f"No notes found with tag '{tag}'."
