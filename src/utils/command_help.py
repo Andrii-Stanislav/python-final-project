@@ -11,6 +11,7 @@ COMMAND_CATEGORIES: dict[str, List[Tuple[str, str]]] = {
         ("all", "Show all contacts"),
         ("add-email <name> <email>", "Add email to contact"),
         ("show-email <name>", "Show contact's email"),
+        ("find <keyword>", "Find and display contacts matching the keyword (name, phone, email, or birthday)"),
     ],
     "Birthday Management": [
         ("add-birthday <name> <DD.MM.YYYY>", "Add birthday to contact"),
@@ -28,6 +29,10 @@ COMMAND_CATEGORIES: dict[str, List[Tuple[str, str]]] = {
         ("delete-note <title>", "Delete a note"),
         ("find-note <keyword>", "Find notes by keyword"),
         ("show-notes", "Show all notes"),
+        ("add-tag <title> <tag>", "Add a tag to a note"),
+        ("remove-tag <title> <tag>", "Remove a tag from a note"),
+        ("check-tag <title> <tag>", "Check if a tag exists in a note"),
+        ("find-notes-by-tag <tag>", "Find notes by tag")
     ],
     "System Commands": [
         ("hello", "Show this help message"),
