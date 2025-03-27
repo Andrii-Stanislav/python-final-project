@@ -50,6 +50,25 @@ class Address(Field):
     def __init__(self, value: str) -> None:
         super().__init__(value)
 
+class AddressField(Field):
+    def __init__(self, value: str) -> None:
+        super().__init__(value.strip())
+        self.validate_address(value)
+
+    def validate_address(self, value: str) -> None:
+        if len(value) <= 0:
+            raise ValidationException("Address must be at least 1 character")
+    
+class PostIndex(AddressField):
+    def __init__(self, value: str) -> None:
+        super().__init__(value)
+        self.validate_post_index(value)
+
+    def validate_post_index(self, value: str) -> None:
+        if not value.isdigit():
+            raise ValidationException("Post-index must contain only digits")
+        
+        
 class Email(Field):
     def __init__(self, email: str) -> None:
         try:
