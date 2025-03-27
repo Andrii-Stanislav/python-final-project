@@ -122,3 +122,16 @@ def handle_delete_contact(args: List[str], book: AddressBook) -> str:
         return f"Contact '{name}' has been deleted."
     except KeyError as e:
         return str(e)
+    
+    
+@input_error
+def handle_find_contact(args: List[str], book: AddressBook) -> str:
+    if len(args) != 1:
+        raise IndexError("Please provide a search keyword.")
+    
+    found_contacts = book.find_contacts(args[0])
+
+    if not found_contacts:
+        return "No matching contacts found."
+
+    return '\n'.join(str(record) for record in found_contacts)

@@ -10,6 +10,7 @@ from src.handlers.contact_handlers import (
     handle_show_phone,
     handle_show_email,
     handle_show_all,
+    handle_find_contact,
 )
 from src.handlers.birthday_handlers import (
     handle_add_birthday,
@@ -27,6 +28,10 @@ from src.handlers.note_handlers import (
     handle_delete_note,
     handle_show_notes,
     handle_find_note,
+    handle_add_tag,
+    handle_remove_tag,
+    handle_check_tag,
+    handle_find_notes_by_tag,
 )
 from src.models.address_book import AddressBook
 from src.models.notes_book import NotesBook
@@ -95,6 +100,9 @@ def main() -> None:
 
         elif command == "delete-address":
             print(handle_delete_address(args, book))
+        
+        elif command == "find":
+            print(handle_find_contact(args, book))
 
         # Notes
         elif command == "add-note":
@@ -112,6 +120,18 @@ def main() -> None:
         elif command == "show-notes":
             print(handle_show_notes(notes))
 
+        elif command == "add-tag":
+            print(handle_add_tag(args, notes))
+
+        elif command == "remove-tag":
+            print(handle_remove_tag(args, notes))
+
+        elif command == "check-tag":
+            print(handle_check_tag(args, notes))
+
+        elif command == "find-notes-by-tag":
+            print(handle_find_notes_by_tag(args, notes))
+        
         else:
             suggestion = suggest_command(command)
             if suggestion:

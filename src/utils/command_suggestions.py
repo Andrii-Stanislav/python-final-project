@@ -8,6 +8,7 @@ AVAILABLE_COMMANDS: List[str] = [
     "delete",
     "phone",
     "all",
+    "find",
     "add-email",
     "show-email",
     "add-birthday",
