@@ -35,11 +35,13 @@ def handle_show_birthday(args: List[str], book: AddressBook) -> str:
     name = book.normalize_name(name)
 
     record = book.find(name)
-
     if not record:
         raise KeyError(f"Contact '{name}' not found.")
 
-    return record.show_birthday() if record.birthday else "No birthday set."
+    if not record.birthday:
+        raise ValueError("No birthday set.")
+
+    return record.show_birthday()
 
 
 @input_error
@@ -49,8 +51,10 @@ def handle_birthdays(args: List[str], book: AddressBook) -> str:
     date_interval, *_ = args
     upcoming = book.get_upcoming_birthdays(date_interval)
     if len(upcoming) == 0:
-        raise ValueError(f"There are no birthdays in the next {date_interval} days.") 
+        raise ValueError(f"There are no birthdays in the next {date_interval} days.")
     result = []
     for birthday in upcoming:
-        result.append(f"{birthday['name']}: birthday on {birthday['birthday']}, celebrate on {birthday['congratulation_date']}")
+        result.append(
+            f"{birthday['name']}: birthday on {birthday['birthday']}, celebrate on {birthday['congratulation_date']}"
+        )
     return "\n".join(result)
