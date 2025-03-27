@@ -28,7 +28,7 @@ def handle_add_birthday(args: List[str], book: AddressBook) -> str:
 @input_error
 def handle_show_birthday(args: List[str], book: AddressBook) -> str:
     """Show the birthday of a given contact."""
-    if len(args) != 1:
+    if not args:
         raise IndexError("Please provide contact name.")
 
     name = " ".join(args)
@@ -39,7 +39,7 @@ def handle_show_birthday(args: List[str], book: AddressBook) -> str:
     if not record:
         raise KeyError(f"Contact '{name}' not found.")
 
-    return record.show_birthday()
+    return record.show_birthday() if record.birthday else "No birthday set."
 
 
 @input_error

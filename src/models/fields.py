@@ -51,6 +51,6 @@ class Email(Field):
     def __init__(self, email: str) -> None:
         try:
             valid_email = validate_email(email)
-            super().__init__(valid_email.email)
+            super().__init__(valid_email.normalized)
         except EmailNotValidError:
             raise ValidationException("Please enter a valid email address")
