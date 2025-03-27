@@ -48,6 +48,12 @@ class Record:
         if not self.birthday:
             raise ValueError("Birthday not set.")
         return self.birthday.value.strftime("%d.%m.%Y")
+    
+    def delete_birthday(self) -> str:
+        if not self.birthday:
+            raise ValueError("Birthday not set.")
+        self.birthday = None
+        return f"The birthday has been removed for {self.name.value}"
 
     def add_address(self, address: List) -> None:
         self.address = Address(address)
@@ -55,13 +61,13 @@ class Record:
     def show_address(self) -> str:
         if self.address:
             return f"Address: {' '.join(self.address.value)} for {self.name.value}"
-        raise ValueError("Address not set")
+        raise ValueError("Address not set.")
     
     def delete_address(self) -> str:
         if self.address:
             self.address = None
             return f"The address has been removed for {self.name.value}"
-        raise ValueError("Address not set")
+        raise ValueError("Address not set.")
 
     def show_email(self) -> str:
         if not self.email:
