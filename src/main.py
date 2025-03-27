@@ -12,6 +12,7 @@ from src.handlers.contact_handlers import (
 from src.handlers.birthday_handlers import (
     handle_add_birthday,
     handle_show_birthday,
+    handle_delete_birthday,
     handle_birthdays,
 )
 from src.handlers.address_handlers import (
@@ -80,6 +81,9 @@ def main() -> None:
 
         elif command == "show-birthday":
             print(handle_show_birthday(args, book))
+        
+        elif command == "delete-birthday":
+            print(handle_delete_birthday(args, book))
 
         elif command == "birthdays":
             print(handle_birthdays(args, book))
