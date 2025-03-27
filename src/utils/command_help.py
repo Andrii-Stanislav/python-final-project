@@ -11,7 +11,7 @@ COMMAND_CATEGORIES: dict[str, List[Tuple[str, str]]] = {
         ("all", "Show all contacts"),
         ("add-email <name> <email>", "Add email to contact"),
         ("show-email <name>", "Show contact's email"),
-        ("find <keyword>", "Find and display contacts matching the keyword (name, phone, or email)"),
+        ("find <keyword>", "Find and display contacts matching the keyword (name, phone, email, or birthday)"),
     ],
     "Birthday Management": [
         ("add-birthday <name> <DD.MM.YYYY>", "Add birthday to contact"),

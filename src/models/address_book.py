@@ -125,5 +125,8 @@ class AddressBook(UserDict[str, Record]):
             if record.email and query in record.email.value.lower(): 
                 results.append(record)
 
+            if record.birthday and query in record.birthday.value.strftime('%d.%m.%Y'):
+                results.append(record)
+
         return results
 
