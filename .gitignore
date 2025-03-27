@@ -1,6 +1,5 @@
 my_address_book.pkl
 my_notes.pkl
-test_address_book.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -54,6 +53,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+test_address_book.py
 
 # Translations
 *.mo
