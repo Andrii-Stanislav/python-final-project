@@ -44,16 +44,13 @@ def handle_show_birthday(args: List[str], book: AddressBook) -> str:
 
 @input_error
 def handle_birthdays(args: List[str], book: AddressBook) -> str:
-    """Show upcoming birthdays in the next 7 days."""
-    upcoming = book.get_upcoming_birthdays()
-
+    if len(args) < 1:
+        return "Please provide number of days"
+    date_interval, *_ = args
+    upcoming = book.get_upcoming_birthdays(date_interval)
     if len(upcoming) == 0:
-        return "There are no birthdays in the next 7 days."
-
+        raise ValueError(f"There are no birthdays in the next {date_interval} days.") 
     result = []
     for birthday in upcoming:
-        result.append(
-            f"{birthday['name']}: birthday on {birthday['birthday']}, celebrate on {birthday['congratulation_date']}"
-        )
-
+        result.append(f"{birthday['name']}: birthday on {birthday['birthday']}, celebrate on {birthday['congratulation_date']}")
     return "\n".join(result)

@@ -24,41 +24,40 @@ class AddressBook(UserDict[str, Record]):
         else:
             raise KeyError(f"Contact '{name}' not found.")
 
-    def get_upcoming_birthdays(self) -> List[Dict[str, str]]:
+    def get_upcoming_birthdays(self, date_interval: str) -> List[Dict[str, str]]:
+        try:
+            date_interval = int(date_interval)
+        except ValueError:
+            raise ValueError("Date interval must be an integer.")
         today = datetime.now().date()
-        upcoming_birthdays = []
-
+        upcoming_birthdays = {}
+        future_date = today + timedelta(days=date_interval)
         for record in self.data.values():
             if not record.birthday:
                 continue
-
             birthday = record.birthday.value
-
-            this_year_birthday = birthday.replace(year=today.year)
-
-            # If birthday is in the past, move it to next year
-            if this_year_birthday < today:
-                this_year_birthday = this_year_birthday.replace(year=today.year + 1)
-
-            # Check if birthday is in the next 7 days
-            if 0 <= (this_year_birthday - today).days <= 7:
-                congratulation_date = this_year_birthday
-
-                # If birthday is on Saturday or Sunday, move it to Monday
-                if congratulation_date.weekday() == 5:  # Saturday
+            congratulation_date = birthday.replace(year=today.year)
+            if congratulation_date < today:
+                congratulation_date = congratulation_date.replace(year=today.year + 1)
+            while congratulation_date <= future_date:
+                day_of_week = congratulation_date.weekday()
+                if day_of_week == 5:
                     congratulation_date += timedelta(days=2)
-                elif congratulation_date.weekday() == 6:  # Sunday
+                elif day_of_week == 6:
                     congratulation_date += timedelta(days=1)
-
-                upcoming_birthdays.append(
-                    {
-                        "name": record.name.value,
-                        "birthday": congratulation_date.strftime("%d.%m.%Y"),
-                        "congratulation_date": congratulation_date.strftime("%B %d"),
-                    }
-                )
-
-        return upcoming_birthdays
+                birthday = datetime(congratulation_date.year, birthday.month, birthday.day,).date()
+                year = congratulation_date.year
+                if year not in upcoming_birthdays:
+                    upcoming_birthdays[year] = []
+                upcoming_birthdays[year].append({
+                    "name": record.name.value,
+                    "birthday": birthday.strftime("%d.%m.%Y"),
+                    "congratulation_date": congratulation_date.strftime("%A, %B %d")
+                })
+                congratulation_date = datetime(congratulation_date.year + 1 , birthday.month, birthday.day,).date()
+        sorted_years = sorted(upcoming_birthdays.keys())
+        final_result = [entry for year in sorted_years for entry in upcoming_birthdays[year]]
+        return final_result
 
     def add_contact(self, name: str, phone: Optional[str] = None) -> str:
         normalized_name = self.normalize_name(name)

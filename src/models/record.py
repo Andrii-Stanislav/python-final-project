@@ -1,5 +1,5 @@
 from typing import List, Optional
-from src.models.fields import Name, Phone, Birthday, Email
+from src.models.fields import Name, Phone, Birthday, Address, Email
 
 
 class Record:
@@ -8,7 +8,8 @@ class Record:
         self.phones: List[Phone] = []
         self.email: Optional[Email] = None
         self.birthday: Optional[Birthday] = None
-
+        self.address: Address = None
+        
     def add_phone(self, phone: str) -> None:
         self.phones.append(Phone(phone))
 
@@ -47,6 +48,20 @@ class Record:
         if not self.birthday:
             raise ValueError("Birthday not set.")
         return self.birthday.value.strftime("%d.%m.%Y")
+
+    def add_address(self, address: List) -> None:
+        self.address = Address(address)
+
+    def show_address(self) -> str:
+        if self.address:
+            return f"Address: {' '.join(self.address.value)} for {self.name.value}"
+        raise ValueError("Address not set")
+    
+    def delete_address(self) -> str:
+        if self.address:
+            self.address = None
+            return f"The address has been removed for {self.name.value}"
+        raise ValueError("Address not set")
 
     def show_email(self) -> str:
         if not self.email:
