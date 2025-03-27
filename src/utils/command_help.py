@@ -29,6 +29,9 @@ COMMAND_CATEGORIES: dict[str, List[Tuple[str, str]]] = {
         ("delete-note <title>", "Delete a note"),
         ("find-note <keyword>", "Find notes by keyword"),
         ("show-notes", "Show all notes"),
+        ("add-tag <title> <tag>", "Add a tag to a note"),
+        ("remove-tag <title> <tag>", "Remove a tag from a note"),
+        ("check-tag <title> <tag>", "Check if a tag exists in a note"),
     ],
     "System Commands": [
         ("hello", "Show this help message"),

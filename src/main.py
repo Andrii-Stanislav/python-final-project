@@ -28,6 +28,9 @@ from src.handlers.note_handlers import (
     handle_delete_note,
     handle_show_notes,
     handle_find_note,
+    handle_add_tag,
+    handle_remove_tag,
+    handle_check_tag,
 )
 from src.models.address_book import AddressBook
 from src.models.notes_book import NotesBook
@@ -115,6 +118,15 @@ def main() -> None:
 
         elif command == "show-notes":
             print(handle_show_notes(notes))
+
+        elif command == "add-tag":
+            print(handle_add_tag(args, notes))
+
+        elif command == "remove-tag":
+            print(handle_remove_tag(args, notes))
+
+        elif command == "check-tag":
+            print(handle_check_tag(args, notes))
 
         else:
             suggestion = suggest_command(command)
