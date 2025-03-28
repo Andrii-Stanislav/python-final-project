@@ -2,7 +2,6 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from src.models.record import Record
-import re
 
 
 class AddressBook(UserDict[str, Record]):
@@ -107,3 +106,26 @@ class AddressBook(UserDict[str, Record]):
         if not self.data:
             return "No contacts available."
         return "\n".join(str(record) for record in self.data.values())
+    
+    def find_contacts(self, query: str) -> List[Record]:
+        query = query.strip().lower()
+        results = []
+
+        for record in self.data.values():
+            if query in record.name.value.lower():
+                results.append(record)
+                continue
+
+            for phone in record.phones:
+                if query in phone.value:
+                    results.append(record)
+                    break  
+            
+            if record.email and query in record.email.value.lower(): 
+                results.append(record)
+
+            if record.birthday and query in record.birthday.value.strftime('%d.%m.%Y'):
+                results.append(record)
+
+        return results
+

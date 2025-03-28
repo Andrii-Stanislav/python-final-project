@@ -35,7 +35,6 @@ def handle_add_contact(args: List[str], book: AddressBook) -> str:
     except Exception as e:
         return f"Error adding {name}: {str(e)}"
 
-
 def add_email_to_contact(args: List[str], book: AddressBook) -> str:
     """Add an email address to an existing contact.
     
@@ -68,7 +67,6 @@ def add_email_to_contact(args: List[str], book: AddressBook) -> str:
     record.add_email(email)
     return "Email added."
 
-
 def handle_change_contact(args: List[str], book: AddressBook) -> str:
     """Change a contact's phone number for multiple contacts.
     
@@ -89,24 +87,15 @@ def handle_change_contact(args: List[str], book: AddressBook) -> str:
         raise ValueError("Please provide contact name, current phone number, and new phone number.")
     if len(args) < 3:
         raise IndexError(
-            "Please provide at least one contact name, current phone number, and new phone number."
+            "Please provide contact name, current phone number, and new phone number."
         )
 
     old_phone = args[-2]
     new_phone = args[-1]
-    names = " ".join(args[:-2])
+    name = " ".join(args[:-2])
+    name = book.normalize_name(name)
 
-    names = book.normalize_name(names)
-
-    output = []
-    try:
-        result = book.change_contact(names, old_phone, new_phone)
-        output.append(result)
-    except Exception as e:
-        output.append(f"Error for {names}: {str(e)}")
-
-    return "\n".join(output) if output else "No contacts updated."
-
+    return book.change_contact(name, old_phone, new_phone)
 
 def handle_show_phone(args: List[str], book: AddressBook) -> str:
     """Show the phone number(s) for a given contact.
@@ -131,7 +120,6 @@ def handle_show_phone(args: List[str], book: AddressBook) -> str:
     except KeyError:
         return f"Contact '{name}' not found."
 
-
 def handle_show_email(args: List[str], book: AddressBook) -> str:
     """Show the email address for a given contact.
     
@@ -148,10 +136,11 @@ def handle_show_email(args: List[str], book: AddressBook) -> str:
     """
     if len(args) != 1:
         raise IndexError("Please provide contact name.")
+
     name = " ".join(args)
     name = book.normalize_name(name)
-    return book.show_email(name)
 
+    return book.show_email(name)
 
 def handle_show_all(book: AddressBook) -> str:
     """Show all contacts in the address book.
@@ -169,7 +158,6 @@ def handle_show_all(book: AddressBook) -> str:
         return book.show_all()
     except ValueError as e:
         raise ValueError(f"Error: {e}")
-
 
 def handle_delete_contact(args: List[str], book: AddressBook) -> str:
     """Delete a contact by name.

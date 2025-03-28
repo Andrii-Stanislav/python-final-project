@@ -8,6 +8,9 @@ from src.handlers.contact_handlers import (
     handle_delete_contact,
     add_email_to_contact,
     handle_change_contact,
+    handle_show_phone,
+
+    # handle_show_email
 )
 from src.handlers.address_handlers import handle_add_address
 from src.handlers.note_handlers import (
@@ -20,9 +23,28 @@ from src.handlers.note_handlers import (
 from src.handlers.birthday_handlers import (
     handle_add_birthday,
     handle_show_birthday,
+    # handle_delete_birthday,
     handle_birthdays,
 )
 from src.ui.terminal_ui import TerminalUI
+from src.handlers.address_handlers import (
+    handle_add_address,
+    # handle_show_address,
+    # handle_delete_address
+)
+from src.handlers.note_handlers import ( 
+    handle_add_note,
+    handle_edit_note,
+    handle_delete_note,
+    handle_show_notes,
+    handle_find_note,
+    # handle_add_tag,
+    # handle_remove_tag,
+    # handle_check_tag,
+    # handle_find_notes_by_tag,
+)
+from src.models.address_book import AddressBook
+from src.models.notes_book import NotesBook
 
 def main():
     address_book = load_data("my_address_book.pkl", AddressBook)
