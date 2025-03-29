@@ -1,5 +1,7 @@
 from typing import List
 from src.models.notes_book import NotesBook
+from tabulate import tabulate
+from colorama import Fore, Style
 
 
 def handle_add_note(args_str: str, book: "NotesBook") -> str:
@@ -104,9 +106,31 @@ def handle_show_notes(book: "NotesBook") -> str:
         book (NotesBook): The notes book instance to display.
     
     Returns:
-        str: Formatted string containing all notes' information.
+        str: Formatted string containing all notes' information in a table format.
     """
-    return book.show_all_notes()
+    if not book.data:
+        return f"{Fore.YELLOW}No notes available.{Style.RESET_ALL}"
+    
+    # Create table data with colors
+    table_data = []
+    for i, note in enumerate(book.data.values(), 1):
+        row = [
+            f"{Fore.WHITE}{i}{Style.RESET_ALL}",
+            f"{Fore.CYAN}{note.title}{Style.RESET_ALL}",
+            f"{Fore.BLUE}{note.content}{Style.RESET_ALL}",
+            f"{Fore.CYAN}{', '.join(note.tags) if note.tags else f'{Fore.RED}No tags{Style.RESET_ALL}'}{Style.RESET_ALL}"
+        ]
+        table_data.append(row)
+    
+    # Create headers with colors
+    headers = [
+        f"{Fore.WHITE}#{Style.RESET_ALL}",
+        f"{Fore.WHITE}Title{Style.RESET_ALL}",
+        f"{Fore.WHITE}Content{Style.RESET_ALL}",
+        f"{Fore.WHITE}Tags{Style.RESET_ALL}"
+    ]
+    
+    return tabulate(table_data, headers=headers, tablefmt="simple")
 
 def handle_add_tag(args_str: str, book: "NotesBook") -> str:
     """Add a tag to a note.
@@ -178,7 +202,7 @@ def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
         book (NotesBook): The notes book instance to search in.
     
     Returns:
-        str: Formatted string containing all matching notes or "No notes found with tag '{tag}'."
+        str: Formatted string containing all matching notes in a table format.
     """
     args = args_str.split() if args_str else []
     
@@ -186,4 +210,27 @@ def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
         raise IndexError("Please provide a tag to search for.")
     tag = args[0]
     notes = book.find_notes_by_tag(tag)
-    return "\n".join(str(note) for note in notes) if notes else f"No notes found with tag '{tag}'."
+    
+    if not notes:
+        return f"{Fore.YELLOW}No notes found with tag '{tag}'.{Style.RESET_ALL}"
+    
+    # Create table data with colors
+    table_data = []
+    for i, note in enumerate(notes, 1):
+        row = [
+            f"{Fore.WHITE}{i}{Style.RESET_ALL}",
+            f"{Fore.CYAN}{note.title}{Style.RESET_ALL}",
+            f"{Fore.BLUE}{note.content}{Style.RESET_ALL}",
+            f"{Fore.CYAN}{', '.join(note.tags) if note.tags else f'{Fore.RED}No tags{Style.RESET_ALL}'}{Style.RESET_ALL}"
+        ]
+        table_data.append(row)
+    
+    # Create headers with colors
+    headers = [
+        f"{Fore.WHITE}#{Style.RESET_ALL}",
+        f"{Fore.WHITE}Title{Style.RESET_ALL}",
+        f"{Fore.WHITE}Content{Style.RESET_ALL}",
+        f"{Fore.WHITE}Tags{Style.RESET_ALL}"
+    ]
+    
+    return tabulate(table_data, headers=headers, tablefmt="simple")
