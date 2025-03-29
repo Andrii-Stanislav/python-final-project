@@ -1,10 +1,7 @@
-from typing import List
 from src.models.address_book import AddressBook
 
-from typing import List
 
-
-def handle_add_address(args: List[str], book: AddressBook) -> str:
+def handle_add_address(args_str: str, book: AddressBook) -> str:
     """Add an address to an existing contact.
     
     This function interactively collects address information from the user,
@@ -12,7 +9,7 @@ def handle_add_address(args: List[str], book: AddressBook) -> str:
     before being added to the contact's record.
     
     Args:
-        args (List[str]): List containing the contact name.
+        args_str (str): String containing the contact name and address. Example: "John Smith: 123 Main St, Anytown, USA, 12345"
         book (AddressBook): The address book instance to modify.
     
     Returns:
@@ -22,10 +19,13 @@ def handle_add_address(args: List[str], book: AddressBook) -> str:
         ValueError: If contact name is not provided or contact is not found.
         ValueError: If address already exists for the contact.
     """
-    if len(args) < 1:
+
+    [name, address] = args_str.split(":") if args_str else []
+    
+    if not name or name.strip() == "":
         raise ValueError("Please provide contact name")
 
-    name = " ".join(args)
+
     name = book.normalize_name(name)
 
     record = book.find(name)
@@ -34,24 +34,19 @@ def handle_add_address(args: List[str], book: AddressBook) -> str:
     elif record.address:
         raise ValueError(f"Address already exists for {name}")
 
-    address_parts = []
-    address_fields = ["Street", "City", "Region", "Post-index"]
-    for field in address_fields:
-        value = input(f"Enter {field}: ")
-        if not value.strip():
-            raise ValueError(f"{field} cannot be empty.")
-        if field == "Post-index" and not value.isdigit():
-            raise ValueError("Post-index must contain only digits.")
-        address_parts.append(value)
+    address_parts = address.split(",") if address else []
+    
+    if len(address_parts) < 4:
+        raise ValueError("Please provide all address fields")
 
     record.add_address(address_parts)
     return f"Address: {' '.join(address_parts)} added for {name}"
 
-def handle_show_address(args: List[str], book: AddressBook) -> None:
+def handle_show_address(args_str: str, book: AddressBook) -> None:
     """Display the address of a given contact.
     
     Args:
-        args (List[str]): List containing the contact name.
+        args_str (str): String containing the contact name. Example: "John Smith"
         book (AddressBook): The address book instance to search in.
     
     Returns:
@@ -60,6 +55,8 @@ def handle_show_address(args: List[str], book: AddressBook) -> None:
     Raises:
         ValueError: If contact name is not provided or contact is not found.
     """
+    args = args_str.split() if args_str else []
+    
     if not args:
         raise IndexError("Please provide contact name.")
 
@@ -72,11 +69,11 @@ def handle_show_address(args: List[str], book: AddressBook) -> None:
         raise ValueError("Contact not found")
     return record.show_address()
 
-def handle_delete_address(args: List[str], book: AddressBook) -> None:
+def handle_delete_address(args_str: str, book: AddressBook) -> None:
     """Delete the address of a given contact.
     
     Args:
-        args (List[str]): List containing the contact name.
+        args_str (str): String containing the contact name. Example: "John Smith"
         book (AddressBook): The address book instance to modify.
     
     Returns:
@@ -85,7 +82,9 @@ def handle_delete_address(args: List[str], book: AddressBook) -> None:
     Raises:
         ValueError: If contact name is not provided or contact is not found.
     """
-    if len(args) < 1:
+    args = args_str.split() if args_str else []
+    
+    if not args:
         raise ValueError("Please provide contact name")
 
     name = " ".join(args)

@@ -18,7 +18,11 @@ class TerminalUI:
             "Delete Contact",
             "Add Email",
             "Change Phone",
+            "Show Email",
+            "Search Contact",
             "Add Address",
+            "Show Address",
+            "Delete Address",
             "Back"
         ]
         self.note_actions = [
@@ -27,25 +31,34 @@ class TerminalUI:
             "Find Note",
             "Edit Note",
             "Delete Note",
+            "Add Tag",
+            "Remove Tag",
+            "Check Tag",
+            "Find Notes by Tag",
             "Back"
         ]
         self.birthday_actions = [
             "Add Birthday",
             "Show Birthday",
             "Show Upcoming Birthdays",
+            "Delete Birthday",
             "Back"
         ]
         
         # Custom prompts for each command
         self.command_prompts = {
             # Contact prompts
-            "Add Contact": "Enter contact data. Example: John Smith 1234567890",
+            "Add Contact": "Enter contact name and phone number. Example: John Smith 1234567890",
             "Show All Contacts": "Press Enter to continue...",
-            "Find Contact": "Enter contact name to search. Example: John Smith",
+            "Find Contact": "Enter search keyword. Example: John Smith",
             "Delete Contact": "Enter contact name to delete. Example: John Smith",
             "Add Email": "Enter contact name and email. Example: John Smith john@example.com",
             "Change Phone": "Enter contact name, old phone, and new phone. Example: John Smith 1234567890 0987654321",
-            "Add Address": "Enter contact name. Example: John Smith",
+            "Show Email": "Enter contact name. Example: John Smith",
+            "Search Contact": "Enter search keyword. Example: John",
+            "Add Address": "Enter contact name and address. Example: John Smith: 123 Main St, Anytown, USA, 12345",
+            "Show Address": "Enter contact name. Example: John Smith",
+            "Delete Address": "Enter contact name. Example: John Smith",
             
             # Note prompts
             "Add Note": "Enter note title and content. Example: Meeting Notes Today's meeting was productive",
@@ -53,11 +66,16 @@ class TerminalUI:
             "Find Note": "Enter search keyword. Example: meeting",
             "Edit Note": "Enter note title and new content. Example: Meeting Notes Updated meeting notes",
             "Delete Note": "Enter note title to delete. Example: Meeting Notes",
+            "Add Tag": "Enter note title and tag. Example: Meeting Notes work",
+            "Remove Tag": "Enter note title and tag to remove. Example: Meeting Notes work",
+            "Check Tag": "Enter note title and tag to check. Example: Meeting Notes work",
+            "Find Notes by Tag": "Enter tag to search. Example: work",
             
             # Birthday prompts
-            "Add Birthday": "Enter contact name and birthday (DD.MM.YYYY). Example: John Smith 01.01.1990",
+            "Add Birthday": "Enter contact name and birthday. Example: John Smith: 01.01.2000",
             "Show Birthday": "Enter contact name. Example: John Smith",
             "Show Upcoming Birthdays": "Enter number of days to look ahead. Example: 7",
+            "Delete Birthday": "Enter contact name. Example: John Smith",
         }
 
     def init_screen(self):
@@ -191,8 +209,7 @@ class TerminalUI:
                     try:
                         prompt = self.command_prompts.get(action, "Enter arguments:")
                         input_str = self.get_user_input(prompt)
-                        args = input_str.split() if input_str else []
-                        result = handlers[action](args)
+                        result = handlers[action](input_str)
                         self.show_message(result)
                     except Exception as e:
                         self.show_message(str(e), is_error=True) 
