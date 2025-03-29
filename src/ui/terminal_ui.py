@@ -1,10 +1,21 @@
 import curses
 from typing import List, Callable, Dict
+from colorama import init as colorama_init
+
+
+# Initialize colorama
+colorama_init(convert=True, strip=False)
 
 class TerminalUI:
     def __init__(self):
         self.screen = None
         self.current_menu = 0
+        self.table_actions = [
+            "Show All Contacts",
+            "Show All Notes",
+            "Find Notes by Tag",
+            "Show Upcoming Birthdays"
+        ]
         self.menus = [
             "Contacts",
             "Notes",
@@ -45,6 +56,7 @@ class TerminalUI:
             "Back"
         ]
         
+        
         # Custom prompts for each command
         self.command_prompts = {
             # Contact prompts
@@ -82,9 +94,14 @@ class TerminalUI:
         """Initialize the curses screen."""
         self.screen = curses.initscr()
         curses.start_color()
-        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
-        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
-        curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+        # Initialize all color pairs
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)   # Green
+        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)   # White
+        curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)     # Red
+        curses.init_pair(4, curses.COLOR_YELLOW, curses.COLOR_BLACK)  # Yellow
+        curses.init_pair(5, curses.COLOR_BLUE, curses.COLOR_BLACK)    # Blue
+        curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # Magenta
+        curses.init_pair(7, curses.COLOR_CYAN, curses.COLOR_BLACK)    # Cyan
         curses.curs_set(0)
         self.screen.keypad(1)
         curses.noecho()  # Start with echo off
@@ -154,11 +171,118 @@ class TerminalUI:
                 pass
 
     def show_message(self, message: str, is_error: bool = False):
-        """Show a message to the user."""
+        """Show a message to the user with support for ANSI color codes."""
         self.screen.clear()
-        color = curses.color_pair(3) if is_error else curses.color_pair(2)
-        self.screen.addstr(0, 0, message, color)
-        self.screen.addstr(curses.LINES - 1, 0, "Press any key to continue...", curses.color_pair(2))
+        
+        # Split message into lines
+        lines = message.split('\n')
+        current_y = 0
+        
+        for line in lines:
+            if current_y >= curses.LINES - 1:
+                break
+                
+            # Process ANSI color codes
+            current_x = 0
+            i = 0
+            # Initialize default color
+            color = curses.color_pair(3) if is_error else curses.color_pair(2)
+            
+            while i < len(line):
+                if line[i] == '\x1b':  # ANSI escape sequence
+                    # Find the end of the escape sequence
+                    end = line.find('m', i)
+                    if end != -1:
+                        # Extract the color code
+                        color_code = line[i:end+1]
+                        # Convert colorama codes to curses colors
+                        if '31' in color_code:  # Red
+                            color = curses.color_pair(3)
+                        elif '32' in color_code:  # Green
+                            color = curses.color_pair(1)
+                        else:  # Default to white
+                            color = curses.color_pair(2)
+                        i = end + 1
+                        continue
+                
+                # Print the character with current color
+                try:
+                    self.screen.addstr(current_y, current_x, line[i], color)
+                    current_x += 1
+                except curses.error:
+                    pass
+                i += 1
+            
+            current_y += 1
+        
+        # Show continue prompt
+        try:
+            self.screen.addstr(curses.LINES - 1, 0, "Press any key to continue...", curses.color_pair(2))
+        except curses.error:
+            pass
+        
+        self.screen.refresh()
+        self.screen.getch()
+
+    def show_table(self, table_str: str):
+        """Show a table with support for ANSI color codes."""
+        self.screen.clear()
+        
+        # Split table into lines
+        lines = table_str.split('\n')
+        current_y = 0
+        
+        for line in lines:
+            if current_y >= curses.LINES - 1:
+                break
+                
+            # Process ANSI color codes
+            current_x = 0
+            i = 0
+            # Initialize default color
+            color = curses.color_pair(2)  # Default to white
+            
+            while i < len(line):
+                if line[i] == '\x1b':  # ANSI escape sequence
+                    # Find the end of the escape sequence
+                    end = line.find('m', i)
+                    if end != -1:
+                        # Extract the color code
+                        color_code = line[i:end+1]
+                        # Convert colorama codes to curses colors
+                        if '31' in color_code:  # Red
+                            color = curses.color_pair(3)
+                        elif '32' in color_code:  # Green
+                            color = curses.color_pair(1)
+                        elif '33' in color_code:  # Yellow
+                            color = curses.color_pair(4)
+                        elif '34' in color_code:  # Blue
+                            color = curses.color_pair(5)
+                        elif '35' in color_code:  # Magenta
+                            color = curses.color_pair(6)
+                        elif '36' in color_code:  # Cyan
+                            color = curses.color_pair(7)
+                        else:  # Default to white
+                            color = curses.color_pair(2)
+                        i = end + 1
+                        continue
+                
+                # Print the character with current color
+                try:
+                    self.screen.addstr(current_y, current_x, line[i], color)
+                    current_x += 1
+                except curses.error:
+                    pass
+                i += 1
+            
+            current_y += 1
+        
+        # Show continue prompt
+        try:
+            self.screen.addstr(curses.LINES - 1, 0, "Press any key to continue...", curses.color_pair(2))
+        except curses.error:
+            pass
+        
         self.screen.refresh()
         self.screen.getch()
 
@@ -227,6 +351,9 @@ class TerminalUI:
                         prompt = self.command_prompts.get(action, "Enter arguments:")
                         input_str = self.get_user_input(prompt)
                         result = handlers[action](input_str)
-                        self.show_message(result)
+                        if action in self.table_actions:
+                            self.show_table(result)
+                        else:
+                            self.show_message(result)
                     except Exception as e:
                         self.show_message(str(e), is_error=True) 

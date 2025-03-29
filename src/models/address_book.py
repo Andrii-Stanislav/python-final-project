@@ -2,7 +2,12 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from src.models.record import Record
+from tabulate import tabulate
+from colorama import init, Fore, Style, AnsiToWin32
 
+
+# Initialize colorama with proper settings
+init(convert=True, strip=False)
 
 class AddressBook(UserDict[str, Record]):
     def normalize_name(self, name: str) -> str:
@@ -22,7 +27,7 @@ class AddressBook(UserDict[str, Record]):
         if normalized_name in self.data:
             del self.data[normalized_name]
         else:
-            raise KeyError(f"Contact '{name}' not found.")
+            raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
 
     def get_upcoming_birthdays(self, date_interval: str) -> List[Dict[str, str]]:
         try:
@@ -65,9 +70,9 @@ class AddressBook(UserDict[str, Record]):
         if record is None:
             record = Record(name)
             self.add_record(record)
-            message = "Contact added."
+            message = f"{Fore.GREEN}Contact added.{Style.RESET_ALL}"
         else:
-            message = "Contact updated."
+            message = f"{Fore.YELLOW}Contact updated.{Style.RESET_ALL}"
         if phone:
             record.add_phone(phone)
         return message
@@ -76,36 +81,61 @@ class AddressBook(UserDict[str, Record]):
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError("Contact not found.")
+            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
         record.edit_phone(old_phone, new_phone)
-        return "Phone number updated."
+        return f"{Fore.GREEN}Phone number updated.{Style.RESET_ALL}"
 
     def add_email_to_contact(self, name: str, email: str) -> str:
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError("Contact not found.")
+            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
         record.add_email(email)
-        return "Contact updated with email address."
+        return f"{Fore.GREEN}Contact updated with email address.{Style.RESET_ALL}"
 
     def show_phone(self, name: str) -> str:
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError("Contact not found.")
-        return "; ".join(phone.value for phone in record.phones)
+            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+        return f"{Fore.CYAN}{'; '.join(phone.value for phone in record.phones)}{Style.RESET_ALL}"
 
     def show_email(self, name: str) -> str:
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError("Contact not found.")
-        return str(record.email) if record.email else "No email set."
+            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+        return f"{Fore.MAGENTA}{str(record.email) if record.email else 'No email set'}{Style.RESET_ALL}"
 
     def show_all(self) -> str:
         if not self.data:
-            return "No contacts available."
-        return "\n".join(str(record) for record in self.data.values())
+            return f"{Fore.YELLOW}No contacts available.{Style.RESET_ALL}"
+        
+        # Create table data with colors
+        table_data = []
+        for i, record in enumerate(self.data.values(), 1):
+            row = [
+                f"{Fore.WHITE}{i}{Style.RESET_ALL}",
+                f"{Fore.CYAN}{record.name.value}{Style.RESET_ALL}",
+                f"{Fore.BLUE}{'; '.join(phone.value for phone in record.phones)}{Style.RESET_ALL}",
+                f"{Fore.CYAN}{record.email.value if record.email else f'{Fore.RED}No email{Style.RESET_ALL}'}{Style.RESET_ALL}",
+                f"{Fore.BLUE}{record.birthday.value.strftime('%d.%m.%Y') if record.birthday else f'{Fore.RED}No birthday{Style.RESET_ALL}'}{Style.RESET_ALL}",
+                f"{Fore.CYAN}{' '.join(record.address.value) if record.address else f'{Fore.RED}No address{Style.RESET_ALL}'}{Style.RESET_ALL}"
+            ]
+            table_data.append(row)
+        
+        # Create headers with colors
+        headers = [
+            f"{Fore.WHITE}#{Style.RESET_ALL}",
+            f"{Fore.WHITE}Name{Style.RESET_ALL}",
+            f"{Fore.WHITE}Phone Numbers{Style.RESET_ALL}",
+            f"{Fore.WHITE}Email{Style.RESET_ALL}",
+            f"{Fore.WHITE}Birthday{Style.RESET_ALL}",
+            f"{Fore.WHITE}Address{Style.RESET_ALL}"
+        ]
+        
+        # Generate table with simple format
+        return tabulate(table_data, headers=headers, tablefmt="simple")
     
     def find_contacts(self, query: str) -> List[Record]:
         query = query.strip().lower()
