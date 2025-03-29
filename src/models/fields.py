@@ -48,8 +48,8 @@ class Birthday(Field):
 
 class Address(Field):
     def __init__(self, value: str) -> None:
-        super().__init__(value)
-
+        super().__init__(value)    
+    
 class Email(Field):
     def __init__(self, email: str) -> None:
         try:
