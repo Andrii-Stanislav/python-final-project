@@ -19,15 +19,10 @@ def handle_add_birthday(args_str: str, book: AddressBook) -> str:
         KeyError: If contact is not found in the address book.
         ValueError: If the provided date format is invalid.
     """
-    args = args_str.split(":") if args_str else []
+    [name, date] = args_str.split(":") if args_str else []
     
-    if not args:
+    if not name or not date:
         raise ValueError("Please provide contact name and birthday date.")
-    if len(args) < 2:
-        raise ValueError("Please provide both contact name and birthday date.")
-
-    date = args[-1]
-    name = " ".join(args[:-1])
 
     name = book.normalize_name(name)
     record = book.find(name)
@@ -35,7 +30,7 @@ def handle_add_birthday(args_str: str, book: AddressBook) -> str:
     if not record:
         return f"Contact '{name}' not found."
     try:
-        record.add_birthday(date)
+        record.add_birthday(date.strip())
     except ValueError as e:
         return f"Invalid date format: {str(e)}"
 
