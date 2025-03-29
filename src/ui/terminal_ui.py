@@ -91,17 +91,34 @@ class TerminalUI:
 
     def draw_menu(self, title: str, options: List[str], selected: int):
         """Draw a menu with the given title and options."""
-        self.screen.clear()
-        self.screen.addstr(0, 0, title, curses.color_pair(1))
-        self.screen.addstr(0, len(title), " " * (curses.COLS - len(title)))
-        
-        for i, option in enumerate(options):
-            if i == selected:
-                self.screen.addstr(i + 2, 2, f"> {option}", curses.color_pair(1))
-            else:
-                self.screen.addstr(i + 2, 2, f"  {option}", curses.color_pair(2))
-        
-        self.screen.refresh()
+        try:
+            self.screen.clear()
+            # Get terminal dimensions
+            max_y, max_x = self.screen.getmaxyx()
+            
+            # Draw title
+            if max_y > 0 and max_x > 0:
+                title_display = title[:max_x-1]  # Truncate title if too long
+                self.screen.addstr(0, 0, title_display, curses.color_pair(1))
+                self.screen.addstr(0, len(title_display), " " * (max_x - len(title_display)))
+            
+            # Draw options
+            for i, option in enumerate(options):
+                if i + 2 >= max_y:  # Skip if we're out of screen space
+                    break
+                option_display = f"{'>' if i == selected else ' '} {option}"[:max_x-1]
+                try:
+                    self.screen.addstr(i + 2, 2, option_display, 
+                                     curses.color_pair(1) if i == selected else curses.color_pair(2))
+                except curses.error:
+                    continue  # Skip if we can't write to this line
+            
+            self.screen.refresh()
+        except curses.error:
+            # If we can't draw the menu, show a simple message
+            self.screen.clear()
+            self.screen.addstr(0, 0, "Terminal window too small. Please resize and try again.")
+            self.screen.refresh()
 
     def get_user_input(self, prompt: str) -> str:
         """Get user input with a prompt."""

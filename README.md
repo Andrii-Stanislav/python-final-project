@@ -1,128 +1,93 @@
-# Contact Management System
+# Address Book Manager
 
-A command-line contact management system that allows you to store and manage contacts with their phone numbers and birthdays. The system provides functionality to add, modify, and view contacts, as well as track upcoming birthdays.
+A command-line address book application with contact management and note-taking capabilities.
 
 ## Features
 
-<!-- TODO: edit this list before the end of project development -->
-
-- Add new contacts with phone numbers
-- Change existing contact phone numbers
-- View all contacts
-- View specific contact's phone number
-- Add birthday information to contacts
-- View contact's birthday
-- View upcoming birthdays (within next 7 days)
-- Persistent storage of contacts
-- Input validation for names and phone numbers
-- Birthday notifications with weekend handling
+- Contact Management
+  - Add, delete, and search contacts
+  - Store phone numbers, emails, and addresses
+  - Fuzzy search for contacts
+- Note Management
+  - Create, edit, and delete notes
+  - Tag-based organization
+  - Search notes by content or tags
+- Birthday Management
+  - Track birthdays
+  - View upcoming birthdays
+  - Birthday notifications
 
 ## Requirements
 
 - Python 3.8 or higher
-- For external dependencies check `requirements.txt` file
+- Terminal with curses support
 
 ## Installation
 
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd python-final-project
+git clone https://github.com/yourusername/address-book.git
+cd address-book
 ```
 
-2. Create a virtual environment (recommended):
+2. Create and activate a virtual environment (recommended):
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-## Project Structure
+3. Install the package:
 
-```
-python-final-project/
-├── src/
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── fields.py      # Field classes (Name, Phone, Birthday)
-│   │   ├── record.py      # Record class for contact information
-│   │   └── address_book.py # AddressBook class for managing contacts
-│   ├── handlers/
-│   │   ├── __init__.py
-│   │   ├── contact_handlers.py  # Contact-related command handlers
-│   │   └── birthday_handlers.py # Birthday-related command handlers
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── storage.py     # Data persistence functions
-│   │   ├── decorators.py  # Error handling decorators
-│   │   └── input_parser.py # Input parsing utilities
-│   └── main.py            # Main application entry point
-├── README.md
-└── run.sh                 # Shell script to run the application
+```bash
+pip install -e .
 ```
 
 ## Usage
 
-### Running the Application
+Run the application using one of these methods:
 
-You can run the application in two ways:
-
-1. Using the shell script:
+1. Using the installed command:
 
 ```bash
-./run.sh
+address-book
 ```
 
-2. Directly with Python:
+2. Using Python module:
 
 ```bash
-PYTHONPATH=$PYTHONPATH:. python src/main.py
+python -m src
 ```
 
-### Available Commands
-
-<!-- TODO: edit this list before the end of project development -->
-
-- `add <name> <phone>` - Add a new contact or update existing one
-- `change <name> <old_phone> <new_phone>` - Change contact's phone number
-- `phone <name>` - Show contact's phone number
-- `all` - Show all contacts
-- `add-birthday <name> <DD.MM.YYYY>` - Add birthday to contact
-- `show-birthday <name>` - Show contact's birthday
-- `birthdays` - Show upcoming birthdays
-- `hello` - Get a greeting
-- `close` or `exit` - Exit the application
-
-### Examples
-
-<!-- TODO: edit examples before the end of project development -->
+3. Running the main script directly:
 
 ```bash
-add John 1234567890
-add-birthday John 01.01.1990
-phone John
-birthdays
+python src/main.py
 ```
 
-## Data Validation
+## Navigation
 
-- Names must contain only letters
-- Phone numbers must be 10 digits
-- Birthday dates must be in DD.MM.YYYY format
+- Use arrow keys (↑↓) to navigate menus
+- Press Enter to select an option
+- Follow on-screen prompts for input
+- Press any key to continue after messages
 
 ## Data Storage
 
-Contacts are automatically saved to `my_address_book.pkl` when you exit the application. The data is loaded when you start the application.
+The application stores data in the following files:
 
-## Development
+- `my_address_book.pkl`: Contact information
+- `my_notes.pkl`: Notes and tags
 
-The project uses type hints throughout the codebase for better code maintainability and IDE support. You can use tools like `mypy` to check for type errors:
+## Troubleshooting
 
-```bash
-pip install mypy
-mypy src/
-```
+If you encounter any issues:
+
+1. Make sure your terminal window is large enough
+2. Check if your terminal supports curses
+3. Verify Python version (3.8 or higher)
+4. Ensure all dependencies are installed
 
 ## License
 
