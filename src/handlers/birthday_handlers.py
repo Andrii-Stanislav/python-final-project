@@ -1,14 +1,14 @@
-from typing import List
 from src.models.address_book import AddressBook
 from tabulate import tabulate
 
 
-def handle_add_birthday(args: List[str], book: AddressBook) -> str:
+def handle_add_birthday(args_str: str, book: AddressBook) -> str:
     """Add a birthday to an existing contact.
     
     Args:
-        args (List[str]): List containing contact name and birthday date.
+        args_str (str): String containing contact name and birthday date.
                          The last element should be the date, all previous elements form the name.
+                         Example: "John Smith: 01.01.2000"
         book (AddressBook): The address book instance to modify.
     
     Returns:
@@ -19,6 +19,8 @@ def handle_add_birthday(args: List[str], book: AddressBook) -> str:
         KeyError: If contact is not found in the address book.
         ValueError: If the provided date format is invalid.
     """
+    args = args_str.split(":") if args_str else []
+    
     if not args:
         raise ValueError("Please provide contact name and birthday date.")
     if len(args) < 2:
@@ -39,11 +41,11 @@ def handle_add_birthday(args: List[str], book: AddressBook) -> str:
 
     return "Birthday added."
 
-def handle_show_birthday(args: List[str], book: AddressBook) -> str:
+def handle_show_birthday(args_str: str, book: AddressBook) -> str:
     """Show the birthday of a given contact.
     
     Args:
-        args (List[str]): List containing the contact name.
+        args_str (str): String containing the contact name. Example: "John Smith"
         book (AddressBook): The address book instance to search in.
     
     Returns:
@@ -53,11 +55,10 @@ def handle_show_birthday(args: List[str], book: AddressBook) -> str:
         ValueError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
+    args = args_str.split() if args_str else []
+    
     if not args:
         raise ValueError("Please provide contact name.")
-    """Show the birthday of a given contact."""
-    if not args:
-        raise IndexError("Please provide contact name.")
 
     name = " ".join(args)
     name = book.normalize_name(name)
@@ -71,8 +72,10 @@ def handle_show_birthday(args: List[str], book: AddressBook) -> str:
 
     return record.show_birthday()
 
-def handle_delete_birthday(args: List[str], book: AddressBook) -> str:
-    if len(args) != 1:
+def handle_delete_birthday(args_str: str, book: AddressBook) -> str:
+    args = args_str.split() if args_str else []
+    
+    if not args:
         raise IndexError("Please provide contact name.")
 
     name = " ".join(args)
@@ -85,11 +88,12 @@ def handle_delete_birthday(args: List[str], book: AddressBook) -> str:
 
     return record.delete_birthday()
 
-def handle_birthdays(args: List[str], book: AddressBook) -> str:
+def handle_birthdays(args_str: str, book: AddressBook) -> str:
     """Show upcoming birthdays within the specified number of days.
     
     Args:
-        args (List[str]): List containing the number of days to look ahead.
+        args_str (str): String containing the number of days to look ahead.
+                         Example: "7"
         book (AddressBook): The address book instance to search in.
     
     Returns:
@@ -100,6 +104,8 @@ def handle_birthdays(args: List[str], book: AddressBook) -> str:
         ValueError: If number of days is not provided.
         ValueError: If no birthdays are found within the specified period.
     """
+    args = args_str.split() if args_str else []
+    
     if not args:
         raise ValueError("Please provide number of days.")
         
