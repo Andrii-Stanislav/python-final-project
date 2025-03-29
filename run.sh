@@ -1,2 +1,9 @@
 #!/bin/bash
-PYTHONPATH=$PYTHONPATH:. python src/main.py 
+
+# Activate virtual environment if it exists
+if [ -d "venv" ]; then
+    source venv/bin/activate
+fi
+
+# Run the application
+python -m src 
