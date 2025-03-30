@@ -1,6 +1,13 @@
 import curses
 from typing import List, Callable, Dict
 from colorama import init as colorama_init
+from src.constants.commands import (
+    ContactCommands,
+    AddressCommands,
+    NoteCommands,
+    BirthdayCommands,
+    COMMAND_HELP_MESSAGES,
+)
 
 
 # Initialize colorama
@@ -11,10 +18,10 @@ class TerminalUI:
         self.screen = None
         self.current_menu = 0
         self.table_actions = [
-            "Show All Contacts",
-            "Show All Notes",
-            "Find Notes by Tag",
-            "Show Upcoming Birthdays"
+            ContactCommands.SHOW_ALL_CONTACTS,
+            NoteCommands.SHOW_ALL_NOTES,
+            NoteCommands.FIND_NOTES_BY_TAG,
+            BirthdayCommands.SHOW_UPCOMING_BIRTHDAYS
         ]
         self.menus = [
             "Contacts",
@@ -23,72 +30,41 @@ class TerminalUI:
             "Exit"
         ]
         self.contact_actions = [
-            "Add Contact",
-            "Show All Contacts",
-            "Find Contact",
-            "Delete Contact",
-            "Add Email",
-            "Change Phone",
-            "Show Email",
-            "Search Contact",
-            "Add Address",
-            "Show Address",
-            "Delete Address",
+            ContactCommands.ADD_CONTACT,
+            ContactCommands.SHOW_ALL_CONTACTS,
+            ContactCommands.FIND_CONTACT,
+            ContactCommands.DELETE_CONTACT,
+            ContactCommands.ADD_EMAIL,
+            ContactCommands.CHANGE_PHONE,
+            ContactCommands.SHOW_EMAIL,
+            ContactCommands.SEARCH_CONTACT,
+            AddressCommands.ADD_ADDRESS,
+            AddressCommands.SHOW_ADDRESS,
+            AddressCommands.DELETE_ADDRESS,
             "Back"
         ]
         self.note_actions = [
-            "Add Note",
-            "Show All Notes",
-            "Find Note",
-            "Edit Note",
-            "Delete Note",
-            "Add Tag",
-            "Remove Tag",
-            "Check Tag",
-            "Find Notes by Tag",
+            NoteCommands.ADD_NOTE,
+            NoteCommands.SHOW_ALL_NOTES,
+            NoteCommands.FIND_NOTE,
+            NoteCommands.EDIT_NOTE,
+            NoteCommands.DELETE_NOTE,
+            NoteCommands.ADD_TAG,
+            NoteCommands.REMOVE_TAG,
+            NoteCommands.CHECK_TAG,
+            NoteCommands.FIND_NOTES_BY_TAG,
             "Back"
         ]
         self.birthday_actions = [
-            "Add Birthday",
-            "Show Birthday",
-            "Show Upcoming Birthdays",
-            "Delete Birthday",
+            BirthdayCommands.ADD_BIRTHDAY,
+            BirthdayCommands.SHOW_BIRTHDAY,
+            BirthdayCommands.SHOW_UPCOMING_BIRTHDAYS,
+            BirthdayCommands.DELETE_BIRTHDAY,
             "Back"
         ]
         
-        
-        # Custom prompts for each command
-        self.command_prompts = {
-            # Contact prompts
-            "Add Contact": "Enter contact name and phone number. Example: John Smith 1234567890",
-            "Show All Contacts": "Press Enter to continue...",
-            "Find Contact": "Enter search keyword. Example: John Smith",
-            "Delete Contact": "Enter contact name to delete. Example: John Smith",
-            "Add Email": "Enter contact name and email. Example: John Smith john@example.com",
-            "Change Phone": "Enter contact name, old phone, and new phone. Example: John Smith 1234567890 0987654321",
-            "Show Email": "Enter contact name. Example: John Smith",
-            "Search Contact": "Enter search keyword. Example: John",
-            "Add Address": "Enter contact name and address. Example: John Smith: 123 Main St, Anytown, USA, 12345",
-            "Show Address": "Enter contact name. Example: John Smith",
-            "Delete Address": "Enter contact name. Example: John Smith",
-            
-            # Note prompts
-            "Add Note": "Enter note title and content. Example: Meeting Notes Today's meeting was productive",
-            "Show All Notes": "Press Enter to continue...",
-            "Find Note": "Enter search keyword. Example: meeting",
-            "Edit Note": "Enter note title and new content. Example: Meeting Notes Updated meeting notes",
-            "Delete Note": "Enter note title to delete. Example: Meeting Notes",
-            "Add Tag": "Enter note title and tag. Example: Meeting Notes work",
-            "Remove Tag": "Enter note title and tag to remove. Example: Meeting Notes work",
-            "Check Tag": "Enter note title and tag to check. Example: Meeting Notes work",
-            "Find Notes by Tag": "Enter tag to search. Example: work",
-            
-            # Birthday prompts
-            "Add Birthday": "Enter contact name and birthday. Example: John Smith: 01.01.2000",
-            "Show Birthday": "Enter contact name. Example: John Smith",
-            "Show Upcoming Birthdays": "Enter number of days to look ahead. Example: 7",
-            "Delete Birthday": "Enter contact name. Example: John Smith",
-        }
+        # Use the help messages from constants
+        self.command_prompts = COMMAND_HELP_MESSAGES
 
     def init_screen(self):
         """Initialize the curses screen."""
@@ -123,7 +99,9 @@ class TerminalUI:
             for i, option in enumerate(options):
                 if i + 2 >= max_y:  # Skip if we're out of screen space
                     break
-                option_display = f"{'>' if i == selected else ' '} {option}"[:max_x-1]
+                # Convert enum to string if it's an enum value
+                option_str = str(option.value) if hasattr(option, 'value') else str(option)
+                option_display = f"{'>' if i == selected else ' '} {option_str}"[:max_x-1]
                 try:
                     self.screen.addstr(i + 2, 2, option_display, 
                                      curses.color_pair(1) if i == selected else curses.color_pair(2))
