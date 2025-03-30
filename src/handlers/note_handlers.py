@@ -17,9 +17,12 @@ def handle_add_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or content is provided.
     """
-    [title, content] = args_str.split(':') if args_str else []
-    
-    if not title or not content:
+    args = args_str.split(':') if args_str else []
+        
+    title = args[0].strip() if args[0] else ""
+    content = args[1].strip() if args[1] else ""
+
+    if len(args) != 2 or not title or not content:
         raise ValueError("Please provide note title and content.")
         
     return book.add_note(title, content)
@@ -38,12 +41,11 @@ def handle_find_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no search keyword is provided.
     """
-    args = args_str.split() if args_str else []
+    keyword = args_str.strip().lower()
     
-    if not args:
+    if not keyword:
         raise ValueError("Please provide a search keyword.")
     
-    keyword = " ".join(args).lower() 
     matching_notes = [
         str(note) for note in book.data.values()
         if keyword in note.title.lower() or keyword in note.content.lower()
@@ -68,9 +70,12 @@ def handle_edit_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or new content is provided.
     """
-    [title, content] = args_str.split(':') if args_str else []
+    args = args_str.split(':') if args_str else []
     
-    if not title or not content:
+    title = args[0].strip() if args[0] else ""
+    content = args[1].strip() if args[1] else ""
+    
+    if len(args) != 2 or not title or not content:
         raise ValueError("Please provide note title and new content.")
         
     return book.edit_note(title, content)
@@ -140,9 +145,12 @@ def handle_add_tag(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or tag is provided.
     """
-    [title, tag] = args_str.split(':') if args_str else []
+    args = args_str.split(':') if args_str else []
     
-    if not title or not tag:
+    title = args[0].strip() if args[0] else ""
+    tag = args[1].strip() if args[1] else ""
+
+    if len(args) != 2 or not title or not tag:
         raise ValueError("Please provide note title and tag.")
         
     return book.add_tag_to_note(title.strip(), tag.strip())
@@ -160,9 +168,12 @@ def handle_remove_tag(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or tag is provided.
     """
-    [title, tag_to_remove] = args_str.split(':') if args_str else []
+    args = args_str.split(':') if args_str else []
     
-    if not title or not tag_to_remove:
+    title = args[0].strip() if args[0] else ""
+    tag_to_remove = args[1].strip() if args[1] else ""
+
+    if len(args) != 2 or not title or not tag_to_remove:
         raise ValueError("Please provide note title and tag to remove.")
         
     return book.remove_tag_from_note(title.strip(), tag_to_remove.strip())
@@ -177,9 +188,12 @@ def handle_check_tag(args_str: str, book: "NotesBook") -> str:
     Returns:
         str: Success message if tag exists in note or "Tag does not exist in note."
     """
-    [title, tag] = args_str.split(':') if args_str else []
+    args = args_str.split(':') if args_str else []
     
-    if not title or not tag:
+    title = args[0].strip() if args[0] else ""
+    tag = args[1].strip() if args[1] else ""
+    
+    if len(args) != 2 or not title or not tag:
         raise ValueError("Please provide note title and tag to check.")
         
     if book.is_tag_exists_in_note(title.strip(), tag.strip()):
@@ -197,11 +211,11 @@ def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
     Returns:
         str: Formatted string containing all matching notes in a table format.
     """
-    args = args_str.split() if args_str else []
+    tag = args_str.strip()
     
-    if not args:
+    if not tag:
         raise IndexError("Please provide a tag to search for.")
-    tag = args[0]
+    
     notes = book.find_notes_by_tag(tag)
     
     if not notes:

@@ -20,9 +20,12 @@ def handle_add_birthday(args_str: str, book: AddressBook) -> str:
         KeyError: If contact is not found in the address book.
         ValueError: If the provided date format is invalid.
     """
-    [name, date] = args_str.split(":") if args_str else []
+    args = args_str.split(":") if args_str else []
     
-    if not name or not date:
+    name = args[0].strip() if args[0] else ""
+    date = args[1].strip() if args[1] else ""
+
+    if len(args) != 2 or not name or not date:
         raise ValueError("Please provide contact name and birthday date.")
 
     name = book.normalize_name(name)
@@ -51,12 +54,11 @@ def handle_show_birthday(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise ValueError("Please provide contact name.")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
 
     record = book.find(name)
@@ -82,12 +84,11 @@ def handle_delete_birthday(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise IndexError("Please provide contact name.")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
 
     record = book.find(name)
@@ -113,7 +114,7 @@ def handle_birthdays(args_str: str, book: AddressBook) -> str:
         ValueError: If number of days is not provided.
         ValueError: If no birthdays are found within the specified period.
     """
-    args = args_str.split() if args_str else []
+    args = args_str.strip()
     
     if not args:
         raise ValueError("Please provide number of days.")

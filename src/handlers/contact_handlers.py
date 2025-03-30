@@ -56,7 +56,13 @@ def add_email_to_contact(args_str: str, book: AddressBook) -> str:
     if not args_str.strip():
         raise ValueError("Please provide contact name and email address.")
     
-    [name, email] = args_str.split(':') if args_str else []
+    args = args_str.split(':') if args_str else []
+    
+    if len(args) != 2:
+        raise ValueError("Please provide contact name and email address.")
+    
+    name = args[0].strip() if args[0] else ""
+    email = args[1].strip() if args[1] else ""
     
     if not name or not email:
         raise ValueError("Please provide contact name and email address.")
@@ -88,13 +94,14 @@ def handle_change_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name, current phone, or new phone is not provided.
         Exception: If there's an error changing the contact's phone number.
     """
-    if not args_str.strip():
+            
+    args = args_str.split(':') if args_str else [None, '']
+    
+    if len(args) != 2:
         raise ValueError("Please provide contact name, current phone number, and new phone number.")
     
-    if args_str.count(':') != 1:
-        raise ValueError("Please provide contact name, current phone number, and new phone number.")
-    
-    [name, phones] = args_str.split(':') if args_str else [None, '']
+    name = args[0].strip() if args[0] else ""
+    phones = args[1].strip() if args[1] else ""
     
     if not name or not phones:
         raise ValueError("Please provide contact name, current phone number, and new phone number.")
@@ -119,12 +126,11 @@ def handle_show_phone(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise ValueError("Please provide contact name.")
     
-    name = " ".join(args)
     name = book.normalize_name(name)
     try:
         return book.show_phone(name)
@@ -146,12 +152,11 @@ def handle_show_email(args_str: str, book: AddressBook) -> str:
         IndexError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise IndexError("Please provide contact name.")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
 
     return book.show_email(name)
@@ -188,12 +193,11 @@ def handle_delete_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise ValueError("Please provide the name of the contact to delete.")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
     try:
         book.delete(name)
@@ -215,12 +219,12 @@ def handle_find_contact(args_str: str, book: AddressBook) -> str:
     Raises:
         IndexError: If search keyword is not provided.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise IndexError("Please provide a search keyword.")
     
-    name = book.normalize_name(" ".join(args))
+    name = book.normalize_name(name)
 
     found_contacts = book.find_contacts(name)
 

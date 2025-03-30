@@ -20,7 +20,13 @@ def handle_add_address(args_str: str, book: AddressBook) -> str:
         ValueError: If address already exists for the contact.
     """
 
-    [name, address] = args_str.split(":") if args_str else []
+    args = args_str.split(":") if args_str else []
+    
+    if len(args) != 2:
+        raise ValueError("Please provide contact name and address.")
+    
+    name = args[0].strip() if args[0] else ""
+    address = args[1].strip() if args[1] else ""
     
     if not name or name.strip() == "":
         raise ValueError("Please provide contact name")
@@ -55,12 +61,11 @@ def handle_show_address(args_str: str, book: AddressBook) -> None:
     Raises:
         ValueError: If contact name is not provided or contact is not found.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise IndexError("Please provide contact name.")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
 
     record = book.find(name)
@@ -82,12 +87,11 @@ def handle_delete_address(args_str: str, book: AddressBook) -> None:
     Raises:
         ValueError: If contact name is not provided or contact is not found.
     """
-    args = args_str.split() if args_str else []
+    name = args_str.strip()
     
-    if not args:
+    if not name:
         raise ValueError("Please provide contact name")
 
-    name = " ".join(args)
     name = book.normalize_name(name)
 
     record = book.find(name)
