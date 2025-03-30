@@ -310,32 +310,32 @@ class TerminalUI:
                     if selected_menu == "Exit":
                         break
                     elif selected_menu == "Contacts":
-                        self.handle_contact_menu(handlers)
+                        self.handle_contact_menu(handlers, "Contacts")
                     elif selected_menu == "Notes":
-                        self.handle_note_menu(handlers)
+                        self.handle_note_menu(handlers, "Notes")
                     elif selected_menu == "Birthdays":
-                        self.handle_birthday_menu(handlers)
+                        self.handle_birthday_menu(handlers, "Birthdays")
                 
         finally:
             self.cleanup()
 
-    def handle_contact_menu(self, handlers: Dict[str, Callable]):
+    def handle_contact_menu(self, handlers: Dict[str, Callable], title: str):
         """Handle the contacts submenu."""
-        self.__handle_menu(handlers, self.contact_actions)
+        self.__handle_menu(handlers, self.contact_actions, title)
 
-    def handle_note_menu(self, handlers: Dict[str, Callable]):
+    def handle_note_menu(self, handlers: Dict[str, Callable], title: str):
         """Handle the notes submenu."""
-        self.__handle_menu(handlers, self.note_actions)
+        self.__handle_menu(handlers, self.note_actions, title)
 
-    def handle_birthday_menu(self, handlers: Dict[str, Callable]):
+    def handle_birthday_menu(self, handlers: Dict[str, Callable], title: str):
         """Handle the birthdays submenu."""
-        self.__handle_menu(handlers, self.birthday_actions)
+        self.__handle_menu(handlers, self.birthday_actions, title)
 
-    def __handle_menu(self, handlers: Dict[str, Callable], menu: List[str]):
+    def __handle_menu(self, handlers: Dict[str, Callable], menu: List[str], title: str):
         """Handle submenu."""
         selected = 0
         while True:
-            self.draw_menu("Birthday Management", menu, selected)
+            self.draw_menu(f'{title} Management', menu, selected)
             key = self.screen.getch()
             
             if key == curses.KEY_UP and selected > 0:

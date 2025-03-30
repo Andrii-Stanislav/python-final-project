@@ -72,6 +72,9 @@ def wrap_handler(handler, address_book=None, notes_book=None):
     return wrapped_handler
 
 def main():
+    '''
+    Main function to run the address book and notes book.
+    '''
     address_book = load_data("my_address_book.pkl", AddressBook)
     notes_book = load_data("my_notes.pkl", NotesBook)
 
@@ -117,6 +120,3 @@ def main():
     # Final save when exiting the program
     save_data(address_book, ADDRESS_BOOK_NAME)
     save_data(notes_book, NOTES_BOOK_NAME)
-
-if __name__ == "__main__":
-    main()
