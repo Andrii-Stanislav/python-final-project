@@ -68,6 +68,19 @@ def handle_show_birthday(args_str: str, book: AddressBook) -> str:
     return record.show_birthday()
 
 def handle_delete_birthday(args_str: str, book: AddressBook) -> str:
+    """Delete the birthday of a given contact.
+    
+    Args:
+        args_str (str): String containing the contact name. Example: "John Smith"
+        book (AddressBook): The address book instance to modify.
+    
+    Returns:
+        str: Success message if birthday was deleted successfully.
+        
+    Raises:
+        ValueError: If contact name is not provided.
+        KeyError: If contact is not found in the address book.
+    """
     args = args_str.split() if args_str else []
     
     if not args:

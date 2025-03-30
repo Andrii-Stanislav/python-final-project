@@ -24,7 +24,6 @@ def handle_add_contact(args_str: str, book: AddressBook) -> str:
     if len(args) < 2:
         raise IndexError("Please provide at least one contact name and a phone number.")
 
-    # TODO: edit validation for first_name, last_name, phone_number
     phone = args[-1]  # Last argument as phone number
     name = " ".join(args[:-1])  # Join all but the last argument as the contact name
 

@@ -1,4 +1,3 @@
-from typing import List
 from src.models.notes_book import NotesBook
 from tabulate import tabulate
 from colorama import Fore, Style
