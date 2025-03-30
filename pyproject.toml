@@ -13,6 +13,9 @@ dependencies = [
     "email_validator==2.2.0",
     "thefuzz==0.22.1",
     "tabulate==0.9.0",
+    "colorama==0.4.6",
+    "pytest==8.0.2",
+    "pytest-cov==4.1.0"
 ]
 requires-python = ">=3.8"
 readme = "README.md"
@@ -42,4 +45,9 @@ src = ["*.pkl"]
 
 [project.urls]
 Homepage = "https://github.com/yourusername/address-book"
-Repository = "https://github.com/yourusername/address-book.git" 
+Repository = "https://github.com/yourusername/address-book.git"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=src --cov-report=term-missing" 

@@ -38,10 +38,11 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install the package:
+3. Install the package and dependencies:
 
 ```bash
 pip install -e .
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -66,6 +67,45 @@ python -m src
 python src/main.py
 ```
 
+## Testing
+
+The project includes comprehensive tests for all handlers. To run the tests:
+
+1. Make sure you have all dependencies installed:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the tests using pytest:
+
+```bash
+# Run all tests
+pytest
+
+# Run tests with detailed output
+pytest -v
+
+# Run tests with print statements visible
+pytest -s
+
+# Run tests with coverage report
+pytest --cov=src tests/
+
+# Run a specific test file
+pytest tests/test_contact_handlers.py
+
+# Run a specific test function
+pytest tests/test_contact_handlers.py::test_handle_add_contact
+```
+
+The test suite includes:
+
+- Contact handler tests (adding, editing, deleting contacts)
+- Note handler tests (adding, editing, deleting notes and tags)
+- Birthday handler tests (adding, showing, and managing birthdays)
+- Address handler tests (adding, showing, and managing addresses)
+
 ## Navigation
 
 - Use arrow keys (↑↓) to navigate menus
@@ -88,6 +128,10 @@ If you encounter any issues:
 2. Check if your terminal supports curses
 3. Verify Python version (3.8 or higher)
 4. Ensure all dependencies are installed
+5. For test-related issues:
+   - Make sure pytest is installed: `pip install pytest pytest-cov`
+   - Check if you're in the correct directory
+   - Verify that the virtual environment is activated
 
 ## License
 

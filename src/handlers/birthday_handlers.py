@@ -1,5 +1,6 @@
 from src.models.address_book import AddressBook
 from tabulate import tabulate
+from colorama import Fore, Style
 
 
 def handle_add_birthday(args_str: str, book: AddressBook) -> str:
@@ -28,11 +29,11 @@ def handle_add_birthday(args_str: str, book: AddressBook) -> str:
     record = book.find(name)
 
     if not record:
-        return f"Contact '{name}' not found."
+        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
     try:
         record.add_birthday(date.strip())
-    except ValueError as e:
-        return f"Invalid date format: {str(e)}"
+    except ValueError:
+        raise ValueError(f"{Fore.RED}Invalid date format: {date.strip()}{Style.RESET_ALL}")
 
     return "Birthday added."
 
