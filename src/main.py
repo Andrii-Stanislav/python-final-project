@@ -5,6 +5,12 @@
 from src.utils.storage import load_data, save_data
 from src.models.address_book import AddressBook
 from src.models.notes_book import NotesBook
+from src.constants.commands import (
+    ContactCommands,
+    AddressCommands,
+    NoteCommands,
+    BirthdayCommands,
+)
 
 from src.handlers.contact_handlers import (
     handle_add_contact,
@@ -81,36 +87,36 @@ def main():
     # Create a dictionary of handlers
     handlers = {
         # Contact handlers
-        "Add Contact": wrap_handler(lambda args: handle_add_contact(args, address_book), address_book=address_book),
-        "Show All Contacts": wrap_handler(lambda args: handle_show_all(address_book), address_book=address_book),
-        "Find Contact": wrap_handler(lambda args: handle_show_phone(args, address_book), address_book=address_book),
-        "Delete Contact": wrap_handler(lambda args: handle_delete_contact(args, address_book), address_book=address_book),
-        "Add Email": wrap_handler(lambda args: add_email_to_contact(args, address_book), address_book=address_book),
-        "Change Phone": wrap_handler(lambda args: handle_change_contact(args, address_book), address_book=address_book),
-        "Show Email": wrap_handler(lambda args: handle_show_email(args, address_book), address_book=address_book),
-        "Search Contact": wrap_handler(lambda args: handle_find_contact(args, address_book), address_book=address_book),
+        ContactCommands.ADD_CONTACT: wrap_handler(lambda args: handle_add_contact(args, address_book), address_book=address_book),
+        ContactCommands.SHOW_ALL_CONTACTS: wrap_handler(lambda args: handle_show_all(address_book), address_book=address_book),
+        ContactCommands.FIND_CONTACT: wrap_handler(lambda args: handle_show_phone(args, address_book), address_book=address_book),
+        ContactCommands.DELETE_CONTACT: wrap_handler(lambda args: handle_delete_contact(args, address_book), address_book=address_book),
+        ContactCommands.ADD_EMAIL: wrap_handler(lambda args: add_email_to_contact(args, address_book), address_book=address_book),
+        ContactCommands.CHANGE_PHONE: wrap_handler(lambda args: handle_change_contact(args, address_book), address_book=address_book),
+        ContactCommands.SHOW_EMAIL: wrap_handler(lambda args: handle_show_email(args, address_book), address_book=address_book),
+        ContactCommands.SEARCH_CONTACT: wrap_handler(lambda args: handle_find_contact(args, address_book), address_book=address_book),
         
         # Address handlers
-        "Add Address": wrap_handler(lambda args: handle_add_address(args, address_book), address_book=address_book),
-        "Show Address": wrap_handler(lambda args: handle_show_address(args, address_book), address_book=address_book),
-        "Delete Address": wrap_handler(lambda args: handle_delete_address(args, address_book), address_book=address_book),
+        AddressCommands.ADD_ADDRESS: wrap_handler(lambda args: handle_add_address(args, address_book), address_book=address_book),
+        AddressCommands.SHOW_ADDRESS: wrap_handler(lambda args: handle_show_address(args, address_book), address_book=address_book),
+        AddressCommands.DELETE_ADDRESS: wrap_handler(lambda args: handle_delete_address(args, address_book), address_book=address_book),
         
         # Note handlers
-        "Add Note": wrap_handler(lambda args: handle_add_note(args, notes_book), notes_book=notes_book),
-        "Show All Notes": wrap_handler(lambda args: handle_show_notes(notes_book), notes_book=notes_book),
-        "Find Note": wrap_handler(lambda args: handle_find_note(args, notes_book), notes_book=notes_book),
-        "Edit Note": wrap_handler(lambda args: handle_edit_note(args, notes_book), notes_book=notes_book),
-        "Delete Note": wrap_handler(lambda args: handle_delete_note(args, notes_book), notes_book=notes_book),
-        "Add Tag": wrap_handler(lambda args: handle_add_tag(args, notes_book), notes_book=notes_book),
-        "Remove Tag": wrap_handler(lambda args: handle_remove_tag(args, notes_book), notes_book=notes_book),
-        "Check Tag": wrap_handler(lambda args: handle_check_tag(args, notes_book), notes_book=notes_book),
-        "Find Notes by Tag": wrap_handler(lambda args: handle_find_notes_by_tag(args, notes_book), notes_book=notes_book),
+        NoteCommands.ADD_NOTE: wrap_handler(lambda args: handle_add_note(args, notes_book), notes_book=notes_book),
+        NoteCommands.SHOW_ALL_NOTES: wrap_handler(lambda args: handle_show_notes(notes_book), notes_book=notes_book),
+        NoteCommands.FIND_NOTE: wrap_handler(lambda args: handle_find_note(args, notes_book), notes_book=notes_book),
+        NoteCommands.EDIT_NOTE: wrap_handler(lambda args: handle_edit_note(args, notes_book), notes_book=notes_book),
+        NoteCommands.DELETE_NOTE: wrap_handler(lambda args: handle_delete_note(args, notes_book), notes_book=notes_book),
+        NoteCommands.ADD_TAG: wrap_handler(lambda args: handle_add_tag(args, notes_book), notes_book=notes_book),
+        NoteCommands.REMOVE_TAG: wrap_handler(lambda args: handle_remove_tag(args, notes_book), notes_book=notes_book),
+        NoteCommands.CHECK_TAG: wrap_handler(lambda args: handle_check_tag(args, notes_book), notes_book=notes_book),
+        NoteCommands.FIND_NOTES_BY_TAG: wrap_handler(lambda args: handle_find_notes_by_tag(args, notes_book), notes_book=notes_book),
         
         # Birthday handlers
-        "Add Birthday": wrap_handler(lambda args: handle_add_birthday(args, address_book), address_book=address_book),
-        "Show Birthday": wrap_handler(lambda args: handle_show_birthday(args, address_book), address_book=address_book),
-        "Show Upcoming Birthdays": wrap_handler(lambda args: handle_birthdays(args, address_book), address_book=address_book),
-        "Delete Birthday": wrap_handler(lambda args: handle_delete_birthday(args, address_book), address_book=address_book),
+        BirthdayCommands.ADD_BIRTHDAY: wrap_handler(lambda args: handle_add_birthday(args, address_book), address_book=address_book),
+        BirthdayCommands.SHOW_BIRTHDAY: wrap_handler(lambda args: handle_show_birthday(args, address_book), address_book=address_book),
+        BirthdayCommands.SHOW_UPCOMING_BIRTHDAYS: wrap_handler(lambda args: handle_birthdays(args, address_book), address_book=address_book),
+        BirthdayCommands.DELETE_BIRTHDAY: wrap_handler(lambda args: handle_delete_birthday(args, address_book), address_book=address_book),
     }
 
     # Create and run the UI
