@@ -17,14 +17,11 @@ def handle_add_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or content is provided.
     """
-    args = args_str.split() if args_str else []
+    [title, content] = args_str.split(':') if args_str else []
     
-    if not args:
+    if not title or not content:
         raise ValueError("Please provide note title and content.")
-    if len(args) < 2:
-        raise ValueError("Please provide both note title and content.")
         
-    title, content = args[0], ' '.join(args[1:])
     return book.add_note(title, content)
 
 def handle_find_note(args_str: str, book: "NotesBook") -> str:
@@ -52,7 +49,10 @@ def handle_find_note(args_str: str, book: "NotesBook") -> str:
         if keyword in note.title.lower() or keyword in note.content.lower()
     ]
     
-    return "\n".join(matching_notes) if matching_notes else "No matching notes found."
+    if not matching_notes:
+        raise KeyError(f"{Fore.RED}No matching notes found.{Style.RESET_ALL}")
+    
+    return "\n".join(matching_notes)
 
 def handle_edit_note(args_str: str, book: "NotesBook") -> str:
     """Edit an existing note's content.
@@ -68,15 +68,12 @@ def handle_edit_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or new content is provided.
     """
-    args = args_str.split() if args_str else []
+    [title, content] = args_str.split(':') if args_str else []
     
-    if not args:
+    if not title or not content:
         raise ValueError("Please provide note title and new content.")
-    if len(args) < 2:
-        raise ValueError("Please provide both note title and new content.")
         
-    title, new_content = args[0], ' '.join(args[1:])
-    return book.edit_note(title, new_content)
+    return book.edit_note(title, content)
 
 def handle_delete_note(args_str: str, book: "NotesBook") -> str:
     """Delete a note by its title.
@@ -91,12 +88,11 @@ def handle_delete_note(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title is provided.
     """
-    args = args_str.split() if args_str else []
     
-    if not args:
+    if not args_str:
         raise ValueError("Please provide note title.")
         
-    return book.delete_note(args[0])
+    return book.delete_note(args_str)
 
 def handle_show_notes(book: "NotesBook") -> str:
     """Display all notes in the notes book.
@@ -144,15 +140,12 @@ def handle_add_tag(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or tag is provided.
     """
-    args = args_str.split() if args_str else []
+    [title, tag] = args_str.split(':') if args_str else []
     
-    if not args:
+    if not title or not tag:
         raise ValueError("Please provide note title and tag.")
-    if len(args) < 2:
-        raise ValueError("Please provide both note title and tag.")
         
-    title, new_tag = args[0], args[1]
-    return book.add_tag_to_note(title, new_tag)
+    return book.add_tag_to_note(title.strip(), tag.strip())
 
 def handle_remove_tag(args_str: str, book: "NotesBook") -> str:
     """Remove a tag from a note.
@@ -167,12 +160,12 @@ def handle_remove_tag(args_str: str, book: "NotesBook") -> str:
     Raises:
         ValueError: If no note title or tag is provided.
     """
-    args = args_str.split() if args_str else []
+    [title, tag_to_remove] = args_str.split(':') if args_str else []
     
-    if len(args) < 2:
+    if not title or not tag_to_remove:
         raise ValueError("Please provide note title and tag to remove.")
-    title, tag_to_remove = args[0], args[1]
-    return book.remove_tag_from_note(title, tag_to_remove)
+        
+    return book.remove_tag_from_note(title.strip(), tag_to_remove.strip())
 
 def handle_check_tag(args_str: str, book: "NotesBook") -> str:
     """Check if a tag exists in a note.
@@ -184,14 +177,15 @@ def handle_check_tag(args_str: str, book: "NotesBook") -> str:
     Returns:
         str: Success message if tag exists in note or "Tag does not exist in note."
     """
-    args = args_str.split() if args_str else []
+    [title, tag] = args_str.split(':') if args_str else []
     
-    if not args:
-        raise IndexError("Please provide note title and tag to check.")
-    title, tag = args[0], args[1]
-    if book.is_tag_exists_in_note(title, tag):
+    if not title or not tag:
+        raise ValueError("Please provide note title and tag to check.")
+        
+    if book.is_tag_exists_in_note(title.strip(), tag.strip()):
         return f"Tag '{tag}' exists in note '{title}'."
-    return f"Tag '{tag}' does not exist in note '{title}'."
+    
+    raise KeyError(f"{Fore.RED}Tag '{tag}' does not exist in note '{title}'.{Style.RESET_ALL}")
 
 def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
     """Find notes by a specific tag.
@@ -211,7 +205,7 @@ def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
     notes = book.find_notes_by_tag(tag)
     
     if not notes:
-        return f"{Fore.YELLOW}No notes found with tag '{tag}'.{Style.RESET_ALL}"
+        raise KeyError(f"{Fore.YELLOW}No notes found with tag '{tag}'.{Style.RESET_ALL}")
     
     # Create table data with colors
     table_data = []

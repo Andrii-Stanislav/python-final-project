@@ -1,5 +1,6 @@
 from collections import UserDict
 from typing import List, Any
+from colorama import Fore, Style
 
 class ValidationException(Exception):
     """Custom exception for field validation errors."""
@@ -218,12 +219,10 @@ class NotesBook(UserDict):
             str: A message indicating whether the note was updated.
         """
         if title in self.data:
-            try:
-                self.data[title].content = NoteContent(new_content).value
-                return "Note updated."
-            except ValidationException as e:
-                return str(e)
-        return "Note not found."
+            self.data[title].content = NoteContent(new_content).value
+            return "Note updated."
+            
+        raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
 
     def delete_note(self, title: str) -> str:
         """Delete a note from the notes book.
@@ -237,7 +236,8 @@ class NotesBook(UserDict):
         if title in self.data:
             del self.data[title]
             return "Note deleted."
-        return "Note not found."
+        
+        raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
 
     def show_all_notes(self) -> str:
         """Display all notes in the notes book.
@@ -258,12 +258,12 @@ class NotesBook(UserDict):
             str: A message indicating whether the tag was added.
         """
         if title not in self.data:
-            return "Note not found."
+            raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
         try:
             self.data[title].add_tag(new_tag)
             return f"Tag '{new_tag}' added to note '{title}'."
         except TagDuplicateError as e:
-            return str(e)
+            raise KeyError(f"{Fore.RED}Tag already exists.{Style.RESET_ALL}")
 
     def remove_tag_from_note(self, title: str, tag_to_remove: str) -> str:
         """Remove a tag from an existing note.
@@ -276,12 +276,12 @@ class NotesBook(UserDict):
             str: A message indicating whether the tag was removed.
         """
         if title not in self.data:
-            return "Note not found."
+            raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
         try:
             self.data[title].remove_tag(tag_to_remove)
             return f"Tag '{tag_to_remove}' removed from note '{title}'."
         except TagNotFound as e:
-            return str(e)
+            raise KeyError(f"{Fore.RED}Tag not found.{Style.RESET_ALL}")
 
     def is_tag_exists_in_note(self, title: str, tag: str) -> bool:
         """Check if a tag exists in a specific note.

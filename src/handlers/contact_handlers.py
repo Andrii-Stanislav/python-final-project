@@ -1,4 +1,5 @@
 from src.models.address_book import AddressBook
+from colorama import Fore, Style
 
 
 def handle_add_contact(args_str: str, book: AddressBook) -> str:
@@ -52,23 +53,19 @@ def add_email_to_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name or email address is not provided.
         KeyError: If contact is not found in the address book.
     """
-    args = args_str.split() if args_str else []
+    [name, email] = args_str.split(':') if args_str else []
     
-    if not args:
+    if not name or not email:
         raise ValueError("Please provide contact name and email address.")
-    if len(args) < 2:
-        raise IndexError("Please provide contact name and email address.")
 
-    email = args[-1]
-    name = " ".join(args[:-1])
     name = book.normalize_name(name)
 
     record = book.find(name)
 
     if not record:
-        return f"Contact '{name}' not found."
+        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
 
-    record.add_email(email)
+    record.add_email(email.strip())
     return "Email added."
 
 def handle_change_contact(args_str: str, book: AddressBook) -> str:
@@ -88,21 +85,15 @@ def handle_change_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name, current phone, or new phone is not provided.
         Exception: If there's an error changing the contact's phone number.
     """
-    args = args_str.split() if args_str else []
+    [name, phones] = args_str.split(':') if args_str else []
     
-    if not args:
+    if not name or not phones:
         raise ValueError("Please provide contact name, current phone number, and new phone number.")
-    if len(args) < 3:
-        raise IndexError(
-            "Please provide contact name, current phone number, and new phone number."
-        )
 
-    old_phone = args[-2]
-    new_phone = args[-1]
-    name = " ".join(args[:-2])
+    [old_phone, new_phone] = phones.split()
     name = book.normalize_name(name)
 
-    return book.change_contact(name, old_phone, new_phone)
+    return book.change_contact(name, old_phone.strip(), new_phone.strip())
 
 def handle_show_phone(args_str: str, book: AddressBook) -> str:
     """Show the phone number(s) for a given contact.
@@ -123,12 +114,13 @@ def handle_show_phone(args_str: str, book: AddressBook) -> str:
     
     if not args:
         raise ValueError("Please provide contact name.")
+    
     name = " ".join(args)
     name = book.normalize_name(name)
     try:
         return book.show_phone(name)
     except KeyError:
-        return f"Contact '{name}' not found."
+        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
 
 def handle_show_email(args_str: str, book: AddressBook) -> str:
     """Show the email address for a given contact.
@@ -170,7 +162,7 @@ def handle_show_all(book: AddressBook) -> str:
     try:
         return book.show_all()
     except ValueError as e:
-        raise ValueError(f"Error: {e}")
+        raise ValueError(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
 
 def handle_delete_contact(args_str: str, book: AddressBook) -> str:
     """Delete a contact by name.
@@ -196,9 +188,9 @@ def handle_delete_contact(args_str: str, book: AddressBook) -> str:
     name = book.normalize_name(name)
     try:
         book.delete(name)
-        return f"Contact '{name}' has been deleted."
+        return f"{Fore.GREEN}Contact '{name}' has been deleted.{Style.RESET_ALL}"
     except KeyError:
-        raise ValueError(f"Contact '{name}' not found.")
+        raise ValueError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
 
 def handle_find_contact(args_str: str, book: AddressBook) -> str:
     """Find contacts by name.
@@ -224,6 +216,6 @@ def handle_find_contact(args_str: str, book: AddressBook) -> str:
     found_contacts = book.find_contacts(name)
 
     if not found_contacts:
-        return "No matching contacts found."
+        raise KeyError(f"{Fore.RED}No matching contacts found.{Style.RESET_ALL}")
 
     return '\n'.join(str(record) for record in found_contacts)
