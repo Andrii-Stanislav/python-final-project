@@ -50,7 +50,7 @@ def handle_find_note(args_str: str, book: "NotesBook") -> str:
     ]
     
     if not matching_notes:
-        raise KeyError(f"{Fore.RED}No matching notes found.{Style.RESET_ALL}")
+        raise KeyError("No matching notes found.")
     
     return "\n".join(matching_notes)
 
@@ -185,7 +185,7 @@ def handle_check_tag(args_str: str, book: "NotesBook") -> str:
     if book.is_tag_exists_in_note(title.strip(), tag.strip()):
         return f"Tag '{tag}' exists in note '{title}'."
     
-    raise KeyError(f"{Fore.RED}Tag '{tag}' does not exist in note '{title}'.{Style.RESET_ALL}")
+    raise KeyError(f"Tag '{tag}' does not exist in note '{title}'.")
 
 def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
     """Find notes by a specific tag.
@@ -205,7 +205,7 @@ def handle_find_notes_by_tag(args_str: str, book: "NotesBook") -> str:
     notes = book.find_notes_by_tag(tag)
     
     if not notes:
-        raise KeyError(f"{Fore.YELLOW}No notes found with tag '{tag}'.{Style.RESET_ALL}")
+        raise KeyError(f"No notes found with tag '{tag}'.")
     
     # Create table data with colors
     table_data = []

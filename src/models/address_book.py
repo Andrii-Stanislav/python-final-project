@@ -62,7 +62,7 @@ class AddressBook(UserDict[str, Record]):
         if normalized_name in self.data:
             del self.data[normalized_name]
         else:
-            raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
+            raise KeyError(f"Contact '{name}' not found.")
 
     def get_upcoming_birthdays(self, date_interval: str) -> List[Dict[str, str]]:
         """Get a list of upcoming birthdays within the specified date interval.
@@ -149,7 +149,7 @@ class AddressBook(UserDict[str, Record]):
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+            raise KeyError("Contact not found.")
         record.edit_phone(old_phone, new_phone)
         return f"{Fore.GREEN}Phone number updated.{Style.RESET_ALL}"
 
@@ -169,7 +169,7 @@ class AddressBook(UserDict[str, Record]):
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+            raise KeyError(f"Contact not found.")
         record.add_email(email)
         return f"{Fore.GREEN}Contact updated with email address.{Style.RESET_ALL}"
 
@@ -188,7 +188,7 @@ class AddressBook(UserDict[str, Record]):
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+            raise KeyError("Contact not found.")
         return f"{Fore.CYAN}{'; '.join(phone.value for phone in record.phones)}{Style.RESET_ALL}"
 
     def show_email(self, name: str) -> str:
@@ -206,7 +206,7 @@ class AddressBook(UserDict[str, Record]):
         normalized_name = self.normalize_name(name)
         record = self.find(normalized_name)
         if record is None:
-            raise KeyError(f"{Fore.RED}Contact not found.{Style.RESET_ALL}")
+            raise KeyError("Contact not found.")
         return f"{Fore.MAGENTA}{str(record.email) if record.email else 'No email set'}{Style.RESET_ALL}"
 
     def show_all(self) -> str:

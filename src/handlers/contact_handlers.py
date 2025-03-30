@@ -53,6 +53,9 @@ def add_email_to_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name or email address is not provided.
         KeyError: If contact is not found in the address book.
     """
+    if not args_str.strip():
+        raise ValueError("Please provide contact name and email address.")
+    
     [name, email] = args_str.split(':') if args_str else []
     
     if not name or not email:
@@ -63,7 +66,7 @@ def add_email_to_contact(args_str: str, book: AddressBook) -> str:
     record = book.find(name)
 
     if not record:
-        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
+        raise KeyError(f"Contact '{name}' not found.")
 
     record.add_email(email.strip())
     return "Email added."
@@ -85,7 +88,13 @@ def handle_change_contact(args_str: str, book: AddressBook) -> str:
         ValueError: If contact name, current phone, or new phone is not provided.
         Exception: If there's an error changing the contact's phone number.
     """
-    [name, phones] = args_str.split(':') if args_str else []
+    if not args_str.strip():
+        raise ValueError("Please provide contact name, current phone number, and new phone number.")
+    
+    if args_str.count(':') != 1:
+        raise ValueError("Please provide contact name, current phone number, and new phone number.")
+    
+    [name, phones] = args_str.split(':') if args_str else [None, '']
     
     if not name or not phones:
         raise ValueError("Please provide contact name, current phone number, and new phone number.")
@@ -120,7 +129,7 @@ def handle_show_phone(args_str: str, book: AddressBook) -> str:
     try:
         return book.show_phone(name)
     except KeyError:
-        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
+        raise KeyError(f"Contact '{name}' not found.")
 
 def handle_show_email(args_str: str, book: AddressBook) -> str:
     """Show the email address for a given contact.
@@ -162,7 +171,7 @@ def handle_show_all(book: AddressBook) -> str:
     try:
         return book.show_all()
     except ValueError as e:
-        raise ValueError(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
+        raise ValueError(f"Error: {e}")
 
 def handle_delete_contact(args_str: str, book: AddressBook) -> str:
     """Delete a contact by name.
@@ -190,7 +199,7 @@ def handle_delete_contact(args_str: str, book: AddressBook) -> str:
         book.delete(name)
         return f"{Fore.GREEN}Contact '{name}' has been deleted.{Style.RESET_ALL}"
     except KeyError:
-        raise ValueError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
+        raise ValueError(f"Contact '{name}' not found.")
 
 def handle_find_contact(args_str: str, book: AddressBook) -> str:
     """Find contacts by name.
@@ -216,6 +225,6 @@ def handle_find_contact(args_str: str, book: AddressBook) -> str:
     found_contacts = book.find_contacts(name)
 
     if not found_contacts:
-        raise KeyError(f"{Fore.RED}No matching contacts found.{Style.RESET_ALL}")
+        raise KeyError("No matching contacts found.")
 
     return '\n'.join(str(record) for record in found_contacts)

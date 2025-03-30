@@ -222,7 +222,7 @@ class NotesBook(UserDict):
             self.data[title].content = NoteContent(new_content).value
             return "Note updated."
             
-        raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
+        raise KeyError(f"Note not found.")
 
     def delete_note(self, title: str) -> str:
         """Delete a note from the notes book.
@@ -237,7 +237,7 @@ class NotesBook(UserDict):
             del self.data[title]
             return "Note deleted."
         
-        raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
+        raise KeyError("Note not found.")
 
     def show_all_notes(self) -> str:
         """Display all notes in the notes book.
@@ -258,12 +258,12 @@ class NotesBook(UserDict):
             str: A message indicating whether the tag was added.
         """
         if title not in self.data:
-            raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
+            raise KeyError(f"Note not found.")
         try:
             self.data[title].add_tag(new_tag)
             return f"Tag '{new_tag}' added to note '{title}'."
         except TagDuplicateError as e:
-            raise KeyError(f"{Fore.RED}Tag already exists.{Style.RESET_ALL}")
+            raise KeyError(f"Tag already exists.")
 
     def remove_tag_from_note(self, title: str, tag_to_remove: str) -> str:
         """Remove a tag from an existing note.
@@ -276,12 +276,12 @@ class NotesBook(UserDict):
             str: A message indicating whether the tag was removed.
         """
         if title not in self.data:
-            raise KeyError(f"{Fore.RED}Note not found.{Style.RESET_ALL}")
+            raise KeyError(f"Note not found.")
         try:
             self.data[title].remove_tag(tag_to_remove)
             return f"Tag '{tag_to_remove}' removed from note '{title}'."
         except TagNotFound as e:
-            raise KeyError(f"{Fore.RED}Tag not found.{Style.RESET_ALL}")
+            raise KeyError(f"Tag not found.")
 
     def is_tag_exists_in_note(self, title: str, tag: str) -> bool:
         """Check if a tag exists in a specific note.

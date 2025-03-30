@@ -29,11 +29,11 @@ def handle_add_birthday(args_str: str, book: AddressBook) -> str:
     record = book.find(name)
 
     if not record:
-        raise KeyError(f"{Fore.RED}Contact '{name}' not found.{Style.RESET_ALL}")
+        raise KeyError(f"Contact '{name}' not found.")
     try:
         record.add_birthday(date.strip())
     except ValueError:
-        raise ValueError(f"{Fore.RED}Invalid date format: {date.strip()}{Style.RESET_ALL}")
+        raise ValueError(f"Invalid date format: {date.strip()}")
 
     return "Birthday added."
 
