@@ -1,5 +1,7 @@
 # Address Book Manager
 
+<!--  -->
+
 A command-line address book application with contact management and note-taking capabilities.
 
 ## Features
